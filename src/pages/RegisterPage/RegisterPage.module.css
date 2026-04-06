@@ -1,0 +1,195 @@
+/* Same centered-shell layout as LoginPage — stacked mobile/tablet, side-by-side desktop. */
+
+.shell {
+  width: 100%;
+  padding-block: var(--space-6);
+  padding-inline: var(--container-padding-x);
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--space-2-5); /* 10px */
+  margin-inline: auto;
+}
+
+.hero {
+  position: relative;
+  flex-shrink: 0;
+  height: 17.5rem; /* 280px — Figma mobile */
+  border-radius: var(--radius-ui); /* 30px */
+  background: var(--color-primary);
+  overflow: hidden;
+}
+
+.heroImage {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 85%;
+}
+
+.petCard {
+  display: none;
+  position: absolute;
+  left: var(--space-8);
+  bottom: var(--space-8);
+  right: auto;
+  max-width: min(18.375rem, calc(100% - var(--space-8)));
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  grid-template-columns: auto 1fr;
+  gap: var(--space-3) var(--space-3);
+  align-items: start;
+  box-shadow: var(--shadow-sm);
+}
+
+.petAvatar {
+  grid-row: 1 / span 2;
+  grid-column: 1;
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.petCardHeader {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-6);
+}
+
+.petName {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-ui);
+  letter-spacing: var(--letter-spacing-ui);
+  color: var(--color-primary);
+}
+
+.petBirthday {
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.167;
+  letter-spacing: -0.02em;
+  color: var(--color-text-muted);
+}
+
+.petBirthday strong {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.petBio {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.167;
+  letter-spacing: -0.02em;
+  color: var(--color-text-secondary);
+}
+
+.panel {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.75rem 1.25rem; /* 60px 20px — Figma mobile */
+  border-radius: var(--radius-ui); /* 30px */
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (min-width: 375px) {
+  .grid {
+    max-width: 20.9375rem; /* 335px */
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .shell {
+    padding-block: var(--space-8);
+    padding-inline: 2rem;
+  }
+
+  .grid {
+    max-width: 44rem; /* 704px */
+    gap: var(--space-4); /* 16px */
+  }
+
+  .hero {
+    height: 18.875rem; /* 302px — Figma tablet */
+    border-radius: var(--radius-auth-card); /* 60px */
+  }
+
+  .petCard {
+    display: grid;
+  }
+
+  .panel {
+    min-height: 35rem; /* 560px — Figma tablet */
+    border-radius: var(--radius-auth-card); /* 60px */
+  }
+}
+
+/* Desktop */
+@media (min-width: 1280px) {
+  .shell {
+    padding-block: var(--space-8);
+    padding-inline: 2rem;
+  }
+
+  .grid {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    gap: var(--space-8); /* 32px */
+    max-width: 76rem; /* 1216px */
+  }
+
+  .hero {
+    width: 37rem; /* 592px */
+    height: auto;
+    min-height: 40.875rem; /* 654px */
+    border-radius: var(--radius-auth-card); /* 60px */
+    box-shadow: none;
+  }
+
+  .heroImage {
+    object-position: center 90%;
+  }
+
+  .petCard {
+    display: grid;
+    left: 3.8125rem;
+    bottom: 6.0625rem;
+    max-width: 18.375rem;
+    box-shadow: var(--shadow-xs);
+  }
+
+  .panel {
+    width: 37rem; /* 592px */
+    min-height: 40.875rem; /* 654px */
+    padding: var(--space-16) var(--space-12);
+    border-radius: var(--radius-auth-card); /* 60px */
+    box-shadow: none;
+  }
+}
