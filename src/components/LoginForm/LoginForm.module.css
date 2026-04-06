@@ -1,12 +1,21 @@
-/* Adaptive (not fluid): distinct values per breakpoint, no clamp(). */
+/* Adaptive (not fluid): distinct values per breakpoint, no clamp().
+   Field-scoped color tokens override global --color-danger with Figma-exact values. */
 
 .form {
+  /* Figma-exact field state colors, scoped to this component */
+  --color-field-error:   #ef2447; /* Figma: solid red stroke + error text */
+  --color-field-success: #08aa83; /* Figma: success stroke + check icon */
+  --shadow-field-error:   0 0 0 3px color-mix(in srgb, #ef2447 18%, transparent);
+  --shadow-field-success: 0 0 0 3px color-mix(in srgb, #08aa83 18%, transparent);
+
   display: flex;
   flex-direction: column;
   gap: var(--space-6); /* 24px — Figma mobile intro ↔ lower */
   width: 100%;
   max-width: 26.5rem; /* 424px — Figma tablet/desktop form column */
 }
+
+/* ── Intro ──────────────────────────────────────────────────────────────── */
 
 .intro {
   display: flex;
@@ -34,6 +43,8 @@
   color: var(--color-text-muted);
 }
 
+/* ── Field layout ───────────────────────────────────────────────────────── */
+
 .lower {
   display: flex;
   flex-direction: column;
@@ -55,30 +66,67 @@
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-1); /* 4px — Figma ~4px between field and error message */
 }
+
+/* ── Input wrap: default state ─────────────────────────────────────────── */
+/* Figma: stroke #262626 @15%, 30px radius, no fill */
 
 .inputWrap {
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-ui);
+  border: 1px solid var(--color-border); /* #262626 @15% */
+  border-radius: var(--radius-ui);       /* 30px */
   background: var(--color-surface);
   padding: var(--space-4);
   min-height: 2.625rem; /* 42px — Figma mobile */
-  transition: border-color var(--duration-normal) var(--ease-in-out),
-    box-shadow var(--duration-normal) var(--ease-in-out);
+  transition:
+    border-color var(--duration-normal) var(--ease-in-out),
+    box-shadow   var(--duration-normal) var(--ease-in-out);
 }
 
-.inputWrapPassword {
-  padding-inline-end: 3rem;
-}
-
+/* Figma hover/focus: stroke #f6b83d (primary), full-opacity value text */
 .inputWrap:focus-within {
   border-color: var(--color-primary);
   box-shadow: var(--shadow-focus);
 }
+
+/* When a trailing icon is present, open up right padding for email */
+.inputWrapWithTrail {
+  padding-inline-end: 2.75rem; /* 44px — clears 22px icon + 14px gap + 8px breathing room */
+}
+
+/* Password field: always reserves space for the eye-toggle */
+.inputWrapPassword {
+  padding-inline-end: 3rem; /* 48px — eye button 44px + 4px */
+}
+
+/* ── Error state ────────────────────────────────────────────────────────── */
+/* Figma: solid #ef2447 stroke (no opacity), trailing cross-small icon */
+
+.inputWrapError {
+  border-color: var(--color-field-error);
+}
+
+.inputWrapError:focus-within {
+  border-color: var(--color-field-error);
+  box-shadow: var(--shadow-field-error);
+}
+
+/* ── Success state ─────────────────────────────────────────────────────── */
+/* Figma: solid #08aa83 stroke, trailing check icon */
+
+.inputWrapSuccess {
+  border-color: var(--color-field-success);
+}
+
+.inputWrapSuccess:focus-within {
+  border-color: var(--color-field-success);
+  box-shadow: var(--shadow-field-success);
+}
+
+/* ── Input text ─────────────────────────────────────────────────────────── */
 
 .input {
   flex: 1;
@@ -95,8 +143,35 @@
 }
 
 .input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--color-text-muted); /* #262626 @50% */
 }
+
+/* ── Trailing state icons (email field) ─────────────────────────────────── */
+/* Figma: cross-small 22×22 on error, check 22×22 on success, both trailing */
+
+.inputTrail {
+  position: absolute;
+  right: 0.875rem; /* 14px from right edge */
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;  /* 22px */
+  height: 1.375rem; /* 22px */
+  flex-shrink: 0;
+  pointer-events: none; /* decorative — no click target */
+}
+
+.inputTrailError {
+  color: var(--color-field-error);
+}
+
+.inputTrailSuccess {
+  color: var(--color-field-success);
+}
+
+/* ── Password eye-toggle ────────────────────────────────────────────────── */
 
 .togglePw {
   position: absolute;
@@ -126,11 +201,29 @@
   outline-offset: 2px;
 }
 
-.error {
-  font-size: var(--text-sm);
-  color: var(--color-danger);
-  margin: 0;
+/* Tint toggle icon to match field border state */
+.togglePwError {
+  color: var(--color-field-error);
 }
+
+.togglePwSuccess {
+  color: var(--color-field-success);
+}
+
+/* ── Inline error message ───────────────────────────────────────────────── */
+/* Figma exact: #ef2447, 12px Manrope Medium, line-height 14px, ls -0.36px */
+
+.error {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.75rem;          /* 12px — Figma exact */
+  font-weight: var(--font-weight-medium);
+  line-height: 0.875rem;       /* 14px — Figma exact */
+  letter-spacing: -0.0225em;   /* -0.36px @ 16px root ≈ -0.36/16 = −0.0225em */
+  color: var(--color-field-error);
+}
+
+/* ── Submit button ──────────────────────────────────────────────────────── */
 
 .submit {
   width: 100%;
@@ -139,6 +232,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-2);
   padding-block: 0;
   padding-inline: var(--space-8-75);
   min-height: 2.625rem; /* 42px — Figma mobile */
@@ -171,10 +265,44 @@
   cursor: not-allowed;
 }
 
+/* ── Loading spinner ────────────────────────────────────────────────────── */
+/* Derived from design system: white ring on primary background, 18px, 0.65s */
+
+.spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.125rem;  /* 18px */
+  height: 1.125rem;
+  border-radius: var(--radius-full);
+  border: 2px solid rgba(255 255 255 / 0.35);
+  border-top-color: #ffffff;
+  animation: spin 0.65s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Screen-reader only utility (scoped — no global pollution) ─────────── */
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+
 .footer {
   margin: 0;
   font-size: var(--text-xs); /* 12px — Figma mobile */
-  line-height: 1.167; /* 14/12 — Figma mobile */
+  line-height: 1.167;        /* 14/12 — Figma mobile */
   letter-spacing: var(--letter-spacing-ui);
   color: var(--color-text-muted);
   text-align: center;
@@ -203,52 +331,53 @@
   border-radius: var(--radius-sm);
 }
 
-/* Tablet + Desktop: stepped up to Figma tablet/desktop values */
+/* ── Tablet + Desktop: stepped up to Figma tablet/desktop values ─────────── */
+
 @media (min-width: 768px) {
   .form {
-    gap: var(--space-8); /* 32px — Figma tablet/desktop */
+    gap: var(--space-8); /* 32px */
   }
 
   .intro {
-    gap: var(--space-4); /* 16px — Figma tablet/desktop */
+    gap: var(--space-4); /* 16px */
   }
 
   .title {
-    font-size: 3.375rem; /* 54px — Figma tablet/desktop */
+    font-size: 3.375rem; /* 54px */
   }
 
   .subtitle {
-    font-size: var(--text-lead); /* 18px — Figma tablet/desktop */
-    line-height: 1.222; /* 22/18 — Figma tablet/desktop */
+    font-size: var(--text-lead); /* 18px */
+    line-height: 1.222;          /* 22/18 */
   }
 
   .lower {
-    gap: var(--space-4); /* 16px — Figma tablet/desktop */
+    gap: var(--space-4); /* 16px */
   }
 
   .fieldGroup {
-    gap: var(--space-16); /* 64px — Figma tablet/desktop inputs ↔ submit */
+    gap: var(--space-16); /* 64px */
   }
 
   .fields {
-    gap: var(--space-4); /* 16px — Figma tablet/desktop */
+    gap: var(--space-4); /* 16px */
   }
 
   .inputWrap {
-    min-height: 3.25rem; /* 52px — Figma tablet/desktop */
+    min-height: 3.25rem; /* 52px */
   }
 
   .input {
-    font-size: var(--text-base); /* 16px — Figma tablet/desktop */
+    font-size: var(--text-base); /* 16px */
   }
 
   .submit {
-    min-height: 3.25rem; /* 52px — Figma tablet/desktop */
-    font-size: var(--text-base); /* 16px — Figma tablet/desktop */
+    min-height: 3.25rem; /* 52px */
+    font-size: var(--text-base); /* 16px */
   }
 
   .footer {
-    font-size: var(--text-sm); /* 14px — Figma tablet/desktop */
+    font-size: var(--text-sm); /* 14px */
     line-height: var(--line-height-ui);
   }
 }

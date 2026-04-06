@@ -3,18 +3,36 @@
  *   .panelHome     → white panel (opened from /home)
  *   .panelInternal → gold panel  (opened from any other page)
  *
- * Mobile-first: 320–767px panel occupies right 58%; 768–1279px right 50%.
+ * Drawer width (non-stretchy):
+ *   320–374px: clamp(185px, 58vw, 218px) — fluid ~58% of viewport
+ *   375–767px: fixed 218px (58% of 375 band)
+ *   768px+:    fixed 374px (50% of 768 tablet band)
+ * Scrim covers the full viewport; panel stacks above (opaque).
  * Component is JS-gated and never mounts at ≥1280px.
  */
 
 /* ── Root overlay ────────────────────────────────────────────────────── */
 
 .root {
+  --nav-drawer-w: clamp(185px, 58vw, 218px);
+
   position: fixed;
   inset: 0;
   z-index: var(--z-menu-drawer);
   pointer-events: none;
   animation: rootIn var(--duration-normal) var(--ease-out) both;
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+  .root {
+    --nav-drawer-w: 218px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .root {
+    --nav-drawer-w: 374px;
+  }
 }
 
 .root > * {
@@ -31,7 +49,6 @@
 .scrim {
   position: absolute;
   inset: 0;
-  right: 58%;
   margin: 0;
   padding: 0;
   border: none;
@@ -52,7 +69,10 @@
   top: 0;
   right: 0;
   bottom: 0;
-  left: 42%;
+  left: auto;
+  z-index: 1;
+  width: var(--nav-drawer-w);
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   padding: var(--space-5) var(--space-5) var(--space-8);
@@ -338,12 +358,7 @@
 /* ── Tablet band (768–1279px) ─────────────────────────────────────────── */
 
 @media (min-width: 768px) {
-  .scrim {
-    right: 50%;
-  }
-
   .panel {
-    left: 50%;
     padding: var(--space-6) var(--container-padding-x) var(--space-10);
   }
 
