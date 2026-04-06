@@ -1,26 +1,24 @@
-/* Desktop: dual 592×654 panels, 60px radius, ~20px gutter. <1280: stacked, ~40px radii (screenshots). */
+/* Mobile: stacked, 30px radii. Tablet: stacked, 60px radii. Desktop: side-by-side 592×654 panels, 60px radii, 32px gutter. */
 
 .shell {
   width: 100%;
   padding-block: var(--space-6);
-  padding-inline: var(--container-padding-x);
+  padding-inline: var(--container-padding-x); /* 20px at 375+ */
 }
 
 .grid {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--space-3); /* ~12px hero ↔ form (mobile / tablet) */
-  max-width: 80rem;
+  gap: var(--space-2-5); /* 10px — Figma mobile hero ↔ panel */
   margin-inline: auto;
 }
 
 .hero {
   position: relative;
   flex-shrink: 0;
-  min-height: 36vh;
-  max-height: 26rem;
-  border-radius: var(--radius-4xl);
+  height: 17.5rem; /* 280px — Figma mobile */
+  border-radius: var(--radius-ui); /* 30px — Figma mobile */
   background: var(--color-primary);
   overflow: hidden;
 }
@@ -31,20 +29,19 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Corgi anchored toward bottom edge like desktop/mobile refs */
   object-position: center 85%;
 }
 
 .petCard {
+  display: none; /* mobile: not present in Figma mobile design */
   position: absolute;
-  left: var(--space-4);
-  bottom: var(--space-4);
+  left: var(--space-8);
+  bottom: var(--space-8);
   right: auto;
   max-width: min(18.375rem, calc(100% - var(--space-8)));
   padding: var(--space-4);
   border-radius: var(--radius-xl);
   background: var(--color-surface);
-  display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-3) var(--space-3);
   align-items: start;
@@ -113,28 +110,51 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-8) var(--space-6);
-  border-radius: var(--radius-4xl);
+  padding: 3.75rem 1.25rem; /* 60px 20px — Figma mobile */
+  border-radius: var(--radius-ui); /* 30px — Figma mobile */
   background: var(--color-surface);
   box-shadow: var(--shadow-sm);
 }
 
-/* Tablet: taller hero, still stacked (matches login-tablet screenshot) */
-@media (min-width: 768px) and (max-width: 1279px) {
-  .shell {
-    padding-block: var(--space-8);
-  }
-
-  .hero {
-    min-height: 42vh;
-    max-height: 32rem;
+/* Mobile band: lock content to Figma 375 − 20×2 = 335px */
+@media (min-width: 375px) {
+  .grid {
+    max-width: 20.9375rem; /* 335px */
   }
 }
 
-/* Desktop: fixed Figma dimensions, 60px radii, ~20px gutter */
+/* Tablet: 60px radii, fixed heights, 16px card gap, 32px outer padding */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .shell {
+    padding-block: var(--space-8);
+    padding-inline: 2rem; /* 32px — Figma tablet (overrides --container-padding-x: 24px) */
+  }
+
+  .grid {
+    max-width: 44rem; /* 704px — Figma 768 − 32×2 */
+    gap: var(--space-4); /* 16px — Figma tablet */
+  }
+
+  .hero {
+    height: 18.875rem; /* 302px — Figma tablet */
+    border-radius: var(--radius-auth-card); /* 60px */
+  }
+
+  .petCard {
+    display: grid; /* visible from tablet up */
+  }
+
+  .panel {
+    min-height: 35rem; /* 560px — Figma tablet card height */
+    border-radius: var(--radius-auth-card); /* 60px */
+  }
+}
+
+/* Desktop: side-by-side 592×654 panels, 60px radii, 32px gutter */
 @media (min-width: 1280px) {
   .shell {
-    padding-block: var(--space-10);
+    padding-block: var(--space-8); /* 32px — Figma desktop */
+    padding-inline: 2rem; /* 32px — Figma desktop (overrides --container-padding-x: 64px) */
   }
 
   .grid {
@@ -142,15 +162,15 @@
     flex-wrap: nowrap;
     justify-content: center;
     align-items: stretch;
-    gap: var(--space-5); /* ~20px between panels */
+    gap: var(--space-8); /* 32px — Figma desktop */
+    max-width: 76rem; /* 1216px — Figma 592×2 + 32 */
   }
 
   .hero {
-    width: 37rem;
-    min-height: 40.875rem;
-    max-height: none;
+    width: 37rem; /* 592px */
     height: auto;
-    border-radius: var(--radius-auth-card);
+    min-height: 40.875rem; /* 654px */
+    border-radius: var(--radius-auth-card); /* 60px */
     box-shadow: none;
   }
 
@@ -158,18 +178,19 @@
     object-position: center 90%;
   }
 
-  .panel {
-    width: 37rem;
-    min-height: 40.875rem;
-    padding: var(--space-16) var(--space-12);
-    border-radius: var(--radius-auth-card);
-    box-shadow: none;
-  }
-
   .petCard {
-    left: 3.8125rem;
-    bottom: var(--space-8);
+    display: grid;
+    left: 3.8125rem; /* 61px — Figma desktop */
+    bottom: 6.0625rem; /* 97px — Figma desktop */
     max-width: 18.375rem;
     box-shadow: var(--shadow-xs);
+  }
+
+  .panel {
+    width: 37rem; /* 592px */
+    min-height: 40.875rem; /* 654px */
+    padding: var(--space-16) var(--space-12); /* 64px 48px → 84px visual horizontal indent ✓ */
+    border-radius: var(--radius-auth-card); /* 60px */
+    box-shadow: none;
   }
 }
