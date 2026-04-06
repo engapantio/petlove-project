@@ -1,0 +1,221 @@
+/**
+ * Petlove design tokens — mobile-first (320 → 375 → 768 → 1280).
+ * Consumed by global.css and CSS Modules via var(--token-name).
+ */
+
+:root {
+  /* ── Brand & surfaces (Figma: #f6b83d primary, #fff4df secondary fill) ─ */
+  --color-primary: #f6b83d;
+  --color-primary-hover: #e5ad38;
+  --color-primary-active: #cf9428;
+  --color-primary-muted: #fff4df;
+  --color-primary-focus-ring: color-mix(in srgb, var(--color-primary) 22%, transparent);
+
+  --color-bg-page: #f9f9f9;
+  --color-bg-warm: #fdf7f2;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #f3f3f3;
+  --color-surface-muted: #fafafa;
+
+  /* Figma default stroke on nav / inputs: rgba(38,38,38,0.15) */
+  --color-border: rgb(38 38 38 / 0.15);
+  --color-border-subtle: rgb(38 38 38 / 0.12);
+  --color-border-strong: rgb(38 38 38 / 0.25);
+
+  /* Figma copy uses #262626; placeholders / dates use 50% opacity on that base */
+  --color-text: #262626;
+  --color-text-secondary: rgb(38 38 38 / 0.8);
+  --color-text-muted: rgb(38 38 38 / 0.5);
+  --color-text-inverse: #ffffff;
+
+  --color-backdrop: rgb(17 17 17 / 0.55);
+  --color-backdrop-loader: rgb(255 255 255 / 0.72);
+
+  --color-danger: #dc3545;
+  --color-success: #2e7d32;
+
+  /* ── Typography ─────────────────────────────────────────────────────── */
+  --font-sans: 'Manrope', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: var(--font-sans);
+  --font-body: var(--font-sans);
+  --font-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  /* Figma: login subhead 18px; card title 20px */
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-lead: 1.125rem;
+  --text-card-title: 1.25rem;
+  /* Figma: logo wordmark 28px / page H1 e.g. News + Log in 54px */
+  --text-logo: 1.75rem;
+  --text-display: clamp(2rem, 1.25rem + 4vw, 3.375rem);
+  --text-2xl: 1.5rem;
+  --text-3xl: var(--text-display);
+  --text-4xl: clamp(2rem, 1.5rem + 2vw, 3rem);
+
+  --line-height-tight: 1.15;
+  --line-height-snug: 1.3;
+  /* Figma nav/chips: 16px / 20px fixed */
+  --line-height-ui: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+  /* Figma single-line H1 uses fixed px line-height; allow slight wrap on long titles */
+  --line-height-display: 1.05;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --letter-spacing-tight: -0.02em;
+  /* Figma UI labels / nav / buttons: -0.48px @ 16px ≈ -0.03em */
+  --letter-spacing-ui: -0.03em;
+  --letter-spacing-logo: -0.04em;
+  --letter-spacing-wide: 0.04em;
+
+  /* ── Spacing (4px grid) ─────────────────────────────────────────────── */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  /* Figma gaps: 10px nav, 15px chip vertical, 35px card grid */
+  --space-2-5: 0.625rem;
+  --space-3-75: 0.9375rem;
+  --space-8-75: 2.1875rem;
+
+  /* ── Radii ──────────────────────────────────────────────────────────── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  /* Figma news card images */
+  --radius-image: 15px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-4xl: 40px;
+  --radius-5xl: 48px;
+  /* Figma buttons, inputs, nav pills: 30px */
+  --radius-ui: 30px;
+  --radius-pill: var(--radius-ui);
+  --radius-full: 9999px;
+  --radius-card: var(--radius-2xl);
+  /* Login / register large panels */
+  --radius-auth-card: 60px;
+  --radius-modal: var(--radius-xl);
+  --radius-input: var(--radius-ui);
+
+  /* ── Shadows (Figma desktop frames are mostly flat; keep optional lift) ─ */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px rgb(17 17 17 / 0.04);
+  --shadow-sm: 0 2px 8px rgb(17 17 17 / 0.06);
+  --shadow-md: 0 4px 12px rgb(17 17 17 / 0.06);
+  --shadow-lg: 0 4px 20px rgb(17 17 17 / 0.05);
+  --shadow-xl: 0 16px 48px rgb(17 17 17 / 0.12);
+  --shadow-card: var(--shadow-none);
+  --shadow-modal: var(--shadow-sm), var(--shadow-xl);
+  --shadow-focus: 0 0 0 3px var(--color-primary-focus-ring);
+
+  /* ── Z-index scale ───────────────────────────────────────────────────── */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  /* Full-screen header menu (<1280px) — above sticky header, below modals */
+  --z-menu-drawer: 350;
+  --z-modal-backdrop: 1000;
+  --z-modal: 1010;
+  --z-loader: 9999;
+  --z-toast: 10000;
+
+  /* ── Motion ─────────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: ease;
+  --duration-instant: 0ms;
+  --duration-fast: 120ms;
+  --duration-normal: 180ms;
+  --duration-slow: 240ms;
+  --duration-slower: 320ms;
+
+  --transition-colors: color var(--duration-normal) var(--ease-in-out),
+    background-color var(--duration-normal) var(--ease-in-out),
+    border-color var(--duration-normal) var(--ease-in-out);
+  --transition-shadow: box-shadow var(--duration-normal) var(--ease-in-out);
+  --transition-opacity: opacity var(--duration-normal) var(--ease-in-out);
+  --transition-transform: transform var(--duration-slow) var(--ease-out);
+
+  /* ── Breakpoints (reference — use these literals in @media / matchMedia) ─
+     320–374px: fluid compact mobile (only range where fluid width is primary)
+     375–767px: mobile band (stacked pages, burger; no horizontal nav in header)
+     768–1279px: tablet band (burger + in-header auth per tablet mocks; no desktop nav row)
+     1280px+:    desktop band (full horizontal nav, no burger)
+     ───────────────────────────────────────────────────────────────────── */
+  --breakpoint-min: 320px;
+  --breakpoint-sm: 375px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1280px;
+
+  /* ── Layout ─────────────────────────────────────────────────────────── */
+  --container-max-width: 1280px;
+  --container-padding-x: 1rem;
+  --section-gap: var(--space-8);
+  /* Figma desktop content inset ≈ 64px on 1280-wide artboards */
+  --header-min-height: 4.5rem;
+  --nav-gap: var(--space-2-5);
+}
+
+/* 320–374: keep default --container-padding-x (fluid). 375+ mobile band: step padding. */
+@media (min-width: 375px) {
+  :root {
+    --container-padding-x: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-padding-x: 1.5rem;
+    --section-gap: var(--space-10);
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --container-padding-x: 4rem;
+    --section-gap: var(--space-12);
+  }
+}
+
+/* Optional dark scheme — keeps contrast; aligns with existing modal/loader */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-page: #141414;
+    --color-bg-warm: #1a1816;
+    --color-surface: #1e1e1e;
+    --color-surface-elevated: #252525;
+    --color-surface-hover: #2e2e2e;
+    --color-surface-muted: #222222;
+
+    --color-border: #3a3a3a;
+    --color-border-subtle: #2e2e2e;
+    --color-border-strong: #4a4a4a;
+
+    --color-text: #f0f0f0;
+    --color-text-secondary: #c4c4c4;
+    --color-text-muted: #9a9a9a;
+
+    --color-backdrop: rgb(0 0 0 / 0.65);
+    --color-backdrop-loader: rgb(20 20 20 / 0.75);
+
+    --color-primary-muted: color-mix(in srgb, var(--color-primary) 18%, #1e1e1e);
+  }
+}

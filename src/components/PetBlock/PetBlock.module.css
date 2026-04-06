@@ -1,0 +1,23 @@
+.block {
+  display: none;
+  border-radius: var(--radius-auth-card);
+  overflow: hidden;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+@media (min-width: 1280px) {
+  .block {
+    display: block;
+    width: 592px;
+    height: 648px;
+  }
+}

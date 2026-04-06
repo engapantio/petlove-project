@@ -1,0 +1,179 @@
+# Petlove — Cursor Rules
+# Drop this file in the project root. Cursor will apply these rules automatically.
+
+## Project Identity
+This is "Petlove" — a pet adoption and news React SPA.
+Figma: https://www.figma.com/file/puMNfZVg4YI8UZoJ1QiLLi/Petl%F0%9F%92%9Bve
+Backend Swagger: https://petlove.b.goit.study/api-docs/
+
+---
+
+## Stack (non-negotiable)
+- React 18 + TypeScript (strict mode)
+- Vite
+- React Router v6 — BrowserRouter, all routes in App.tsx
+- Redux Toolkit — configureStore, createSlice, createAsyncThunk
+- react-hook-form + Yup — ALL forms, no exceptions
+- react-select — location async select in NoticesFilters
+- react-toastify — error/success notifications
+- axios — with interceptor for Authorization header
+- CSS Modules — one .module.css per component
+
+---
+
+## Folder Structure
+```
+src/
+  api/              # axiosInstance.ts + API functions grouped by domain
+  assets/
+    icons/          # sprite.svg only
+    images/         # static page images
+  components/       # reusable components (Title, SearchField, Pagination, PetBlock, Modal, Icon, Loader)
+  hooks/            # useModal.ts, useAuth.ts, useDebounce.ts
+  pages/            # one folder per route
+  redux/
+    auth/           # authSlice.ts, authThunks.ts, authSelectors.ts
+    notices/
+    news/
+    pets/
+    store.ts
+  routes/           # PrivateRoute.tsx, RestrictedRoute.tsx
+  types/            # all TypeScript interfaces
+  utils/            # formatDate.ts, buildQuery.ts
+```
+
+---
+
+## Code Rules
+
+### TypeScript
+- NEVER use `any` — use `unknown` + type guards or explicit interfaces
+- All component props must have a named TypeScript interface (e.g. `interface TitleProps`)
+- All API response types defined in src/types/
+- Use `FC<Props>` or plain function syntax — never class components
+
+### Components
+- One component per file, named export (no default export)
+- File name = component name (PascalCase)
+- CSS module import: `import css from './ComponentName.module.css'`
+- Never write inline styles
+- All icons: use `<Icon id="icon-name" width={N} height={N} />` from the sprite — never inline SVG in JSX
+
+### Forms (react-hook-form + Yup)
+- Schema defined OUTSIDE the component with `const schema = yup.object({...})`
+- Use `useForm({ resolver: yupResolver(schema), mode: 'onBlur' })`
+- Show `{errors.fieldName?.message}` below each input
+- Never submit to API if form has validation errors
+
+### Validation schemas (copy exactly)
+Registration:
+  name: yup.string().required('Name is required')
+  email: yup.string().matches(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/, 'Invalid email').required()
+  password: yup.string().min(7, 'Min 7 characters').required()
+  confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords must match').required()
+
+Login:
+  email: (same pattern)
+  password: yup.string().min(7).required()
+
+EditUser:
+  name: yup.string()
+  email: yup.string().matches(/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/)
+  avatar: yup.string().matches(/^https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|webp)$/, 'Invalid image URL')
+  phone: yup.string().matches(/^\+38\d{10}$/, 'Format: +38XXXXXXXXXX')
+
+AddPet:
+  title: yup.string().required()
+  name: yup.string().required()
+  imgUrl: yup.string().matches(/^https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|webp)$/).required()
+  species: yup.string().required()
+  birthday: yup.string().matches(/^\d{4}-\d{2}-\d{2}$/, 'Format: YYYY-MM-DD').required()
+  sex: yup.string().required()
+
+### Redux
+- One slice per domain: auth, notices, news, pets
+- Async operations: createAsyncThunk only
+- Selectors in separate *Selectors.ts file
+- NEVER dispatch from inside a reducer
+- Persist token: write to localStorage in extraReducers fulfilled, clear on logout
+
+### Routing
+- PrivateRoute: if !isLoggedIn → <Navigate to="/login" replace />
+- RestrictedRoute: if isLoggedIn → <Navigate to="/profile" replace />
+- Sync URL search params for: page, keyword (News), all filters (Notices)
+
+### Modals
+- All modals rendered via ReactDOM.createPortal(children, document.body)
+- THREE close triggers on EVERY modal: ✕ button, backdrop click, Escape key
+- Base Modal component handles all three — page-specific modals use it as wrapper
+
+### API / axios
+- Base URL: import.meta.env.VITE_API_BASE_URL (default: https://petlove.b.goit.study/api)
+- Request interceptor: attach 'Authorization': `Bearer ${token}` when token exists
+- All API calls wrapped in try/catch; errors dispatched to Redux or shown via toast.error()
+
+### Delete operations (pets, favourites)
+- NEVER reload the page after delete
+- Filter the deleted item from Redux state in extraReducers fulfilled:
+  state.items = state.items.filter(item => item._id !== action.payload)
+
+### Responsive breakpoints
+- Mobile-first: base styles = mobile (375px)
+- Tablet: @media (min-width: 768px)
+- Desktop: @media (min-width: 1280px)
+- Touch targets: min 44x44px
+
+### Performance
+- All images: loading="lazy" + width + height attributes
+- Retina: srcSet with 2x image
+- Fonts: <link rel="preconnect"> before font stylesheet
+- Icon sprite: loaded once, referenced with <use href="...#id">
+
+---
+
+## What NOT to do
+- No `console.log` in committed code
+- No `any` types
+- No inline styles
+- No inline SVG icons (use sprite)
+- No page reload after delete/toggle
+- No Formik (use react-hook-form)
+- No `default export` for components
+- No hardcoded API URLs (use env variable)
+- No `!important` in CSS
+- No skipping heading levels in HTML (h1 → h2 → h3)
+
+---
+
+## API Endpoints Reference
+POST   /users/register         Register new user
+POST   /users/login            Login
+POST   /users/logout           Logout (always clear state)
+GET    /users/current          Get current user (refresh session)
+PUT    /users/edit             Update user profile
+POST   /users/pets             Add pet
+DELETE /users/pets/:id         Delete pet
+GET    /users/notices/favorites   User's favourite notices
+GET    /users/notices/viewed      User's viewed notices
+
+GET    /news                   ?page=&limit=&keyword=
+GET    /notices                ?page=&limit=&keyword=&category=&sex=&species=&locationId=&sortBy=&sortByOrder=
+GET    /notices/:id            Notice detail
+POST   /notices/favorites/:id  Add to favourites
+DELETE /notices/favorites/:id  Remove from favourites
+GET    /notices/categories     List of categories
+GET    /notices/sex            List of sex options
+GET    /notices/species        List of species
+GET    /cities/search          ?value={string} — async location search
+
+GET    /friends                All partner organizations
+
+---
+
+## README must contain
+1. Project title + description
+2. Tech stack list
+3. Figma link
+4. Backend API link
+5. Live demo URL
+6. Getting started commands
