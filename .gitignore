@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local / IDE / secrets (do not commit)
+.env
+.cursorrules
+.cursor/
+docs/
