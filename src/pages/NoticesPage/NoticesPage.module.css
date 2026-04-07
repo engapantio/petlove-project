@@ -1,0 +1,122 @@
+.page {
+  width: 100%;
+  padding-block: var(--section-gap);
+}
+
+.titleWrap {
+  width: 100%;
+  padding-inline: var(--container-padding-x); /* 320–374 fluid */
+  margin-bottom: 20px;
+}
+
+@media (min-width: 375px) {
+  .titleWrap {
+    max-width: 335px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .titleWrap {
+    max-width: 704px;
+    margin-inline: auto;
+    padding-inline: 0;
+    margin-bottom: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .titleWrap {
+    max-width: 1216px;
+    margin-inline: auto;
+    padding-inline: 0;
+    margin-bottom: 40px;
+  }
+}
+
+.title {
+  /* Keep Title's token sizing; ensure tight display line-height */
+  line-height: var(--line-height-display);
+}
+
+.paginationWrap {
+  margin-top: 32px;
+  padding-inline: var(--container-padding-x);
+}
+
+@media (min-width: 375px) {
+  .paginationWrap {
+    max-width: 335px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .paginationWrap {
+    max-width: 704px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .paginationWrap {
+    max-width: 1216px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+.empty {
+  width: 100%;
+  padding-inline: var(--container-padding-x);
+  margin-top: 32px;
+}
+
+@media (min-width: 375px) {
+  .empty {
+    max-width: 335px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .empty {
+    max-width: 704px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .empty {
+    max-width: 1216px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+.emptyCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-2xl);
+  padding: 24px;
+}
+
+.emptyTitle {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-bold);
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.emptyText {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+

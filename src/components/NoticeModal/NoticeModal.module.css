@@ -1,0 +1,293 @@
+.panel {
+  /* Figma: desktop/tablet container 473×510, radius 30, white background */
+  width: 473px;
+  height: 510px;
+  max-width: 473px;
+  background: #ffffff;
+  border-radius: 30px;
+}
+
+.root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.hero {
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
+}
+
+.imageWrap {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.image {
+  width: 150px;
+  height: 150px;
+  border-radius: 100px;
+  object-fit: cover;
+  display: block;
+}
+
+.categoryPill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 34px;
+  width: 52px;
+  border-radius: 30px;
+  background: #fff4df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #f6b83d;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+}
+
+.titleRow {
+  padding: 16px 40px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.title {
+  margin: 0;
+  color: #2b2b2a;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.starFilled,
+.starEmpty {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  background-color: #ffc531;
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.starEmpty {
+  background-color: rgba(38, 38, 38, 0.05);
+}
+
+.ratingValue {
+  color: #2b2b2a;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.metaRow {
+  padding: 16px 40px 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, max-content);
+  column-gap: 26px;
+}
+
+.metaItem {
+  margin: 0;
+}
+
+.metaLabel {
+  margin: 0;
+  color: rgba(38, 38, 38, 0.5);
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: -0.2px;
+}
+
+.metaValue {
+  margin: 0;
+  color: #262626;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: -0.24px;
+}
+
+.comment {
+  padding: 16px 40px 0;
+  margin: 0;
+  color: #2b2b2a;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+}
+
+.bottomRow {
+  margin-top: auto;
+  padding: 16px 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.price {
+  color: #2b2b2a;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.actions {
+  width: 330px;
+  height: 48px;
+  display: flex;
+  gap: 10px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  width: 160px;
+  height: 48px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.48px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.primaryBtn {
+  border: none;
+  background: #f6b83d;
+  color: #ffffff;
+  gap: 8px;
+}
+
+.secondaryBtn {
+  border: none;
+  background: #fff4df;
+  color: #f6b83d;
+}
+
+.state {
+  padding: 16px 40px 0;
+}
+
+.stateTitle {
+  margin: 0 0 6px;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.stateText {
+  margin: 0;
+  color: rgba(38, 38, 38, 0.7);
+}
+
+.stateActions {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .panel {
+    width: 335px;
+    height: 476px;
+    max-width: 335px;
+  }
+
+  .hero {
+    padding-top: 40px;
+  }
+
+  .imageWrap,
+  .image {
+    width: 120px;
+    height: 120px;
+  }
+
+  .categoryPill {
+    width: 48px;
+    height: 32px;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: -0.24px;
+  }
+
+  .titleRow,
+  .metaRow,
+  .comment,
+  .bottomRow,
+  .state {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .title {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .price {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .actions {
+    width: 279px;
+    height: 44px;
+  }
+
+  .primaryBtn {
+    width: 135px;
+    height: 44px;
+  }
+
+  .secondaryBtn {
+    width: 134px;
+    height: 44px;
+  }
+}
+

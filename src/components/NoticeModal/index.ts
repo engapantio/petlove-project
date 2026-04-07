@@ -1,0 +1,2 @@
+export { NoticeModal } from './NoticeModal';
+

@@ -1,0 +1,370 @@
+.section {
+  width: 100%;
+  padding-inline: var(--container-padding-x); /* 320–374: fluid compact */
+}
+
+@media (min-width: 375px) {
+  .section {
+    max-width: 335px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .section {
+    max-width: 704px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section {
+    max-width: 1216px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+}
+
+.panel {
+  background: var(--color-primary-muted); /* #fff4df */
+  border-radius: var(--radius-ui); /* 30 */
+  padding: 20px;
+}
+
+@media (min-width: 768px) {
+  .panel {
+    padding: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .panel {
+    padding: 40px;
+  }
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* 375–767: stacked mobile layout (with a 2-col row for Category + By gender) */
+@media (min-width: 375px) and (max-width: 767px) {
+  .controls {
+    grid-template-columns: 143px 144px;
+    column-gap: 8px;
+    row-gap: 12px;
+  }
+
+  .search {
+    grid-column: 1 / -1;
+  }
+
+  .selectWrap:nth-of-type(1),
+  .selectWrap:nth-of-type(2) {
+    grid-column: span 1;
+  }
+
+  .selectWrap:nth-of-type(3),
+  .locationWrap {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Tablet: wrapped rows approximating Figma widths */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .controls {
+    grid-template-columns: 265px 170px 170px;
+    gap: 16px;
+    justify-content: space-between;
+  }
+
+  .search {
+    grid-column: 1;
+  }
+
+  .selectWrap:nth-of-type(1) {
+    grid-column: 2;
+  }
+
+  .selectWrap:nth-of-type(2) {
+    grid-column: 3;
+  }
+
+  .selectWrap:nth-of-type(3) {
+    grid-column: 1;
+  }
+
+  .locationWrap {
+    grid-column: 2 / 4;
+  }
+}
+
+/* Desktop: single row inputs */
+@media (min-width: 1280px) {
+  .controls {
+    grid-template-columns: 265px 200px 190px 190px 227px;
+    gap: 16px;
+    justify-content: space-between;
+  }
+}
+
+.search {
+  width: 100%;
+}
+
+.selectWrap,
+.locationWrap {
+  width: 100%;
+}
+
+.select,
+.location {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--radius-ui);
+  background: #ffffff;
+  color: #262626;
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: 20px;
+  letter-spacing: -0.48px;
+  outline: none;
+}
+
+.select {
+  /* Match Figma: clean field + chevron aligned right */
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2718%27%20height%3D%2718%27%20viewBox%3D%270%200%2018%2018%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M4.5%206.75L9%2011.25L13.5%206.75%27%20stroke%3D%27%23262626%27%20stroke-opacity%3D%270.5%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px 18px;
+}
+
+.location {
+  /* Match Figma: search icon on the right */
+  padding-right: 32px;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2718%27%20height%3D%2718%27%20viewBox%3D%270%200%2018%2018%27%20fill%3D%27none%27%3E%3Ccircle%20cx%3D%277.75%27%20cy%3D%277.75%27%20r%3D%275%27%20stroke%3D%27%23262626%27%20stroke-opacity%3D%270.5%27%20stroke-width%3D%272%27/%3E%3Cpath%20d%3D%27M12%2012L16%2016%27%20stroke%3D%27%23262626%27%20stroke-opacity%3D%270.5%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px 18px;
+}
+
+.location::placeholder {
+  color: #262626;
+}
+
+.select:focus-visible,
+.location:focus-visible {
+  box-shadow: var(--shadow-focus);
+}
+
+/* Mobile band uses 42px controls in Figma */
+@media (max-width: 767px) {
+  .select,
+  .location {
+    height: 42px;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.42px;
+    padding: 0 12px;
+  }
+
+  .select {
+    padding-right: 30px;
+    background-position: right 12px center;
+  }
+
+  .location {
+    padding-right: 30px;
+    background-position: right 12px center;
+  }
+}
+
+.sortRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 40px;
+}
+
+@media (max-width: 767px) {
+  .sortRow {
+    gap: 10px;
+  }
+}
+
+.pill {
+  height: 48px;
+  padding: 0 14px;
+  border: none;
+  border-radius: var(--radius-ui);
+  background: #ffffff;
+  color: #262626;
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: 20px;
+  letter-spacing: -0.48px;
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+
+.pill:hover {
+  background: var(--color-surface-hover);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.pillActive {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-bold);
+}
+
+/* Mobile: 42px pills */
+@media (max-width: 767px) {
+  .pill {
+    height: 42px;
+    padding: 0 12px;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.42px;
+  }
+}
+
+.pillPopular {
+  width: 83px;
+}
+
+.pillUnpopular {
+  width: 103px;
+}
+
+.pillCheap {
+  width: 76px;
+}
+
+.pillExpensive {
+  width: 101px;
+}
+
+@media (max-width: 767px) {
+  .pillPopular {
+    width: 72px;
+  }
+
+  .pillUnpopular {
+    width: 90px;
+  }
+
+  .pillCheap {
+    width: 66px;
+  }
+
+  .pillExpensive {
+    width: 88px;
+  }
+}
+
+/* SearchField inside this panel must match Figma control styling */
+.search form {
+  width: 100%;
+}
+
+.search form > div {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  border: none;
+  border-radius: var(--radius-ui);
+  background: #ffffff;
+  padding: 0;
+  gap: 0;
+  box-shadow: none;
+}
+
+.search form > div:focus-within {
+  box-shadow: var(--shadow-focus);
+}
+
+.search input[type='search'] {
+  width: 100%;
+  height: 48px;
+  padding-left: 14px;
+  padding-right: 32px;
+  border: none;
+  border-radius: var(--radius-ui);
+  background: transparent;
+  color: #262626;
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: 20px;
+  letter-spacing: -0.48px;
+}
+
+.search input[type='search']::placeholder {
+  color: #262626;
+}
+
+.search input[type='search']:focus-visible {
+  outline: none;
+}
+
+.search button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(38, 38, 38, 0.5);
+}
+
+.search button[type='submit'] {
+  right: 14px;
+}
+
+.search button[aria-label='Clear search'] {
+  right: 40px;
+}
+
+/* Force SearchField icons to 18×18 */
+.search button[type='submit'] svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (max-width: 767px) {
+  .search form > div {
+    height: 42px;
+  }
+
+  .search input[type='search'] {
+    height: 42px;
+    padding-left: 12px;
+    padding-right: 30px;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.42px;
+  }
+
+  .search button[type='submit'] {
+    right: 12px;
+  }
+}
+
