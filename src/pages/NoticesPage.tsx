@@ -1,2 +1,1 @@
-const NoticesPage = () => <div>NoticesPage</div>;
-export default NoticesPage;
+export { default } from './NoticesPage/NoticesPage';

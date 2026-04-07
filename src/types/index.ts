@@ -6,6 +6,8 @@ export interface User {
   phone?: string;
   avatar?: string;
   token: string;
+  /** Favorite notice objects returned by GET /users/current */
+  noticesFavorites?: Array<{ _id: string }>;
 }
 
 export interface AuthState {
@@ -45,6 +47,33 @@ export interface Pet {
   createdAt?: string;
 }
 
+export interface NoticeDetails {
+  _id: string;
+  species: string;
+  category: string;
+  title: string;
+  name: string;
+  birthday: string;
+  comment: string;
+  sex: string;
+  popularity?: number;
+  price?: number;
+  imgURL?: string;
+  imgUrl?: string;
+  location?: {
+    _id: string;
+    stateEn?: string;
+    cityEn?: string;
+  };
+  user?: {
+    _id: string;
+    email?: string;
+    phone?: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface PaginatedResponse<T> {
   results: T[];
   totalPages: number;
@@ -54,13 +83,15 @@ export interface PaginatedResponse<T> {
 
 export interface NoticesState {
   items: Pet[];
-  favorites: Pet[];
+  /** IDs of the current user's favourite notices (string[] matches API response shape). */
+  favoriteIds: string[];
   owned: Pet[];
   totalPages: number;
   currentPage: number;
   isLoading: boolean;
   error: string | null;
   filters: NoticesFilters;
+  filterOptions: NoticesFilterOptions;
 }
 
 export interface NoticesFilters {
@@ -70,6 +101,16 @@ export interface NoticesFilters {
   type: string;
   location: string;
   page: number;
+  // API query extras (mapped to correct param names inside fetchNotices)
+  limit?: number;
+  sortBy?: string;
+  sortByOrder?: 'asc' | 'desc';
+}
+
+export interface NoticesFilterOptions {
+  categories: string[];
+  sexOptions: string[];
+  speciesOptions: string[];
 }
 
 // ─── Notices UI (minimal, for NoticeCard / NoticesList) ────────────────────────

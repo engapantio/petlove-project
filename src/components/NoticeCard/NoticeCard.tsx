@@ -12,7 +12,30 @@ interface NoticeCardProps {
   fallbackImageSrc?: string;
 }
 
-const formatBirthday = (birthday: string): string => birthday;
+const formatBirthday = (birthday: string): string => {
+  const raw = birthday.trim();
+  // API commonly returns YYYY-MM-DD; Figma expects mm.dd.yyyy.
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+    const [yyyy, mm, dd] = raw.split('-');
+    return `${mm}.${dd}.${yyyy}`;
+  }
+  // Already formatted as mm.dd.yyyy — keep.
+  if (/^\d{2}\.\d{2}\.\d{4}$/.test(raw)) return raw;
+
+  // Best-effort parse for ISO strings; fallback to original string.
+  const d = new Date(raw);
+  if (Number.isNaN(d.getTime())) return birthday;
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const yyyy = String(d.getFullYear());
+  return `${mm}.${dd}.${yyyy}`;
+};
+
+const capitalizeFirst = (s: string): string => {
+  const v = s.trim();
+  if (!v) return s;
+  return v.charAt(0).toUpperCase() + v.slice(1);
+};
 
 const formatPrice = (price?: number): string | null => {
   if (price === undefined || Number.isNaN(price)) return null;
@@ -86,28 +109,30 @@ export const NoticeCard = ({
           </div>
         </div>
 
-        <dl className={css.meta}>
-          <div className={css.metaItem}>
-            <dt className={css.metaLabel}>Name</dt>
-            <dd className={css.metaValue}>{item.name}</dd>
-          </div>
-          <div className={css.metaItem}>
-            <dt className={css.metaLabel}>Birthday</dt>
-            <dd className={css.metaValue}>{formatBirthday(item.birthday)}</dd>
-          </div>
-          <div className={css.metaItem}>
-            <dt className={css.metaLabel}>Sex</dt>
-            <dd className={css.metaValue}>{formatSex(item.sex)}</dd>
-          </div>
-          <div className={css.metaItem}>
-            <dt className={css.metaLabel}>Species</dt>
-            <dd className={css.metaValue}>{item.species}</dd>
-          </div>
-          <div className={css.metaItem}>
-            <dt className={css.metaLabel}>Category</dt>
-            <dd className={css.metaValue}>{formatCategory(item.category)}</dd>
-          </div>
-        </dl>
+        <ul className={css.meta} aria-label="Notice details">
+          <li className={css.metaItem}>
+            <span className={css.metaLabel}>Name</span>
+            <span className={css.metaValue}>{item.name}</span>
+          </li>
+          <li className={css.metaItem}>
+            <span className={css.metaLabel}>Birthday</span>
+            <span className={`${css.metaValue} ${css.metaValueNoWrap}`}>
+              {formatBirthday(item.birthday)}
+            </span>
+          </li>
+          <li className={css.metaItem}>
+            <span className={css.metaLabel}>Sex</span>
+            <span className={css.metaValue}>{formatSex(item.sex)}</span>
+          </li>
+          <li className={css.metaItem}>
+            <span className={css.metaLabel}>Species</span>
+            <span className={css.metaValue}>{capitalizeFirst(item.species)}</span>
+          </li>
+          <li className={css.metaItem}>
+            <span className={css.metaLabel}>Category</span>
+            <span className={css.metaValue}>{formatCategory(item.category)}</span>
+          </li>
+        </ul>
 
         <p className={css.comment} title={item.comment}>
           {item.comment}

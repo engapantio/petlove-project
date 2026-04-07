@@ -1,0 +1,144 @@
+.panel {
+  width: 466px;
+  height: 434px;
+  max-width: 466px;
+  background: #ffffff;
+  border-radius: 30px;
+}
+
+.root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 60px 60px;
+}
+
+.iconWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.iconCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  background: #fff4df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emoji {
+  color: #ffffff;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 800;
+  font-size: 44px;
+  line-height: 44px;
+  letter-spacing: -1.76px;
+}
+
+.textBlock {
+  text-align: center;
+  width: 346px;
+  margin-bottom: 28px;
+}
+
+.title {
+  margin: 0 0 20px;
+  color: #f6b83d;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.72px;
+}
+
+.body {
+  margin: 0;
+  color: #2b2b2a;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+}
+
+.actions {
+  margin-top: auto;
+  width: 288px;
+  height: 48px;
+  display: flex;
+  gap: 8px;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  width: 140px;
+  height: 48px;
+  border-radius: 30px;
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.48px;
+  cursor: pointer;
+  border: none;
+}
+
+.primaryBtn {
+  background: #f6b83d;
+  color: #ffffff;
+}
+
+.secondaryBtn {
+  background: #fff4df;
+  color: #f6b83d;
+}
+
+@media (max-width: 480px) {
+  .panel {
+    width: 335px;
+    height: 394px;
+    max-width: 335px;
+  }
+
+  .root {
+    padding: 40px 20px 40px;
+  }
+
+  .textBlock {
+    width: 295px;
+  }
+
+  .title {
+    font-size: 20px;
+    line-height: 20px;
+    letter-spacing: -0.6px;
+    margin-bottom: 20px;
+  }
+
+  .actions {
+    width: 272px;
+    height: 42px;
+    gap: 8px;
+  }
+
+  .primaryBtn {
+    width: 135px;
+    height: 42px;
+    font-size: 14px;
+    letter-spacing: -0.42px;
+    line-height: 18px;
+  }
+
+  .secondaryBtn {
+    width: 129px;
+    height: 42px;
+    font-size: 14px;
+    letter-spacing: -0.42px;
+    line-height: 18px;
+  }
+}
+
