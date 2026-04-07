@@ -72,6 +72,24 @@ export interface NoticesFilters {
   page: number;
 }
 
+// ─── Notices UI (minimal, for NoticeCard / NoticesList) ────────────────────────
+export type NoticeSex = 'male' | 'female' | 'unknown';
+export type NoticeCategory = 'sell' | 'lost' | 'found' | 'free';
+
+export interface NoticeCardItem {
+  _id: string;
+  title: string;
+  name: string;
+  imgURL?: string;
+  species: string;
+  birthday: string;
+  sex: NoticeSex;
+  category: NoticeCategory;
+  comment: string;
+  popularity?: number;
+  price?: number;
+}
+
 // ─── News ────────────────────────────────────────────────────────────────────
 export interface NewsItem {
   _id: string;
