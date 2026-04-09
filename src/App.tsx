@@ -11,7 +11,7 @@ import Layout from './components/layout/Layout';
 
 // ── Lazy-loaded pages ─────────────────────────────────────────────────────────
 const HomePage     = lazy(() => import('./pages/HomePage'));
-const NewsPage     = lazy(() => import('./pages/NewsPage'));
+const NewsPage     = lazy(() => import('./pages/NewsPage/NewsPage'));
 const NoticesPage  = lazy(() => import('./pages/NoticesPage'));
 const FriendsPage  = lazy(() => import('./pages/FriendsPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));

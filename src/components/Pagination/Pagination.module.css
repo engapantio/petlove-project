@@ -3,8 +3,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-6);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   padding: var(--space-4) 0;
+  overflow-x: auto;
 }
 
 .btn {
@@ -23,6 +25,7 @@
   cursor: pointer;
   transition: var(--transition-colors);
   user-select: none;
+  flex: 0 0 auto;
 }
 
 .btn:hover:not(:disabled):not(.active) {
@@ -66,6 +69,7 @@
   color: var(--color-text-muted);
   cursor: default;
   user-select: none;
+  flex: 0 0 auto;
 }
 
 @media (min-width: 768px) {

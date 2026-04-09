@@ -6,9 +6,17 @@ const initialState: NewsState = { items: [], totalPages: 1, currentPage: 1, sear
 
 export const fetchNews = createAsyncThunk(
   'news/fetchAll',
-  async ({ page = 1, search = '' }: { page?: number; search?: string }, { rejectWithValue }) => {
+  async (
+    { page = 1, keyword = '', limit }: { page?: number; keyword?: string; limit?: number },
+    { rejectWithValue },
+  ) => {
     try {
-      const { data } = await instance.get<PaginatedResponse<NewsItem>>(`/news?page=${page}&search=${search}`);
+      const params = new URLSearchParams();
+      params.set('page', String(page));
+      if (keyword) params.set('keyword', keyword);
+      if (limit) params.set('limit', String(limit));
+
+      const { data } = await instance.get<PaginatedResponse<NewsItem>>(`/news?${params}`);
       return data;
     } catch (err: unknown) { return rejectWithValue((err as Error).message); }
   },

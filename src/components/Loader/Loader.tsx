@@ -21,8 +21,9 @@ export const Loader = ({ progress }: LoaderProps): React.ReactElement | null => 
   const authLoading    = useAppSelector((s) => s.auth.isLoading);
   const isRefreshing   = useAppSelector((s) => s.auth.isRefreshing);
   const noticesLoading = useAppSelector((s) => s.notices.isLoading);
+  const newsLoading    = useAppSelector((s) => s.news.isLoading);
 
-  const isVisible = authLoading || isRefreshing || noticesLoading;
+  const isVisible = authLoading || isRefreshing || noticesLoading || newsLoading;
 
   // ── Auto-animate counter when no real progress is supplied ────────────────
   const counterRef = useRef<HTMLSpanElement>(null);

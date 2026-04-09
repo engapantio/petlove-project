@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
@@ -12,17 +12,37 @@ const Header = () => {
   const location = useLocation();
   const { isLoggedIn, user } = useAppSelector((s) => s.auth);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpenPath, setMenuOpenPath] = useState<string | null>(null);
 
   const isDesktop = useMediaQuery('(min-width: 1280px)');
   const isHomePage = location.pathname === '/home' || location.pathname === '/';
+  const isMenuOpen = !isDesktop && menuOpen && menuOpenPath === location.pathname;
+  const prevPathRef = useRef(location.pathname);
 
   useEffect(() => {
-    if (isDesktop) setMenuOpen(false);
-  }, [isDesktop]);
+    if (!isDesktop || !menuOpen) return;
+
+    const raf = requestAnimationFrame(() => {
+      setMenuOpenPath(null);
+      setMenuOpen(false);
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [isDesktop, menuOpen]);
 
   useEffect(() => {
-    setMenuOpen(false);
-  }, [location.pathname]);
+    const prevPath = prevPathRef.current;
+    prevPathRef.current = location.pathname;
+
+    if (!menuOpen || prevPath === location.pathname) return;
+
+    const raf = requestAnimationFrame(() => {
+      setMenuOpenPath(null);
+      setMenuOpen(false);
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [location.pathname, menuOpen]);
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -30,6 +50,7 @@ const Header = () => {
   };
 
   const handleMenuLogout = async () => {
+    setMenuOpenPath(null);
     setMenuOpen(false);
     await dispatch(logout());
     navigate('/home');
@@ -94,10 +115,16 @@ const Header = () => {
           <button
             type="button"
             className={styles.burger}
-            onClick={() => setMenuOpen((o) => !o)}
-            aria-expanded={menuOpen}
+            onClick={() =>
+              setMenuOpen((o) => {
+                const next = !o;
+                setMenuOpenPath(next ? location.pathname : null);
+                return next;
+              })
+            }
+            aria-expanded={isMenuOpen}
             aria-controls={MENU_ID}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
             <span className={styles.burgerBar} aria-hidden="true" />
             <span className={styles.burgerBar} aria-hidden="true" />
@@ -108,8 +135,11 @@ const Header = () => {
 
       {!isDesktop && (
         <NavMenu
-          isOpen={menuOpen}
-          onClose={() => setMenuOpen(false)}
+          isOpen={isMenuOpen}
+          onClose={() => {
+            setMenuOpenPath(null);
+            setMenuOpen(false);
+          }}
           isLoggedIn={isLoggedIn}
           onLogout={() => void handleMenuLogout()}
           variant={isHomePage ? 'home' : 'internal'}

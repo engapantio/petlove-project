@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, type SubmitErrorHandler } from 'react-hook-form';
+import { useForm, useWatch, type SubmitErrorHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link } from 'react-router-dom';
@@ -39,7 +39,7 @@ export const LoginForm = ({
     register,
     handleSubmit,
     setFocus,
-    watch,
+    control,
     formState: { errors, touchedFields },
   } = useForm<LoginFormValues>({
     resolver: yupResolver(schema),
@@ -48,8 +48,8 @@ export const LoginForm = ({
     reValidateMode: 'onChange',
   });
 
-  const emailValue = watch('email');
-  const passwordValue = watch('password');
+  const emailValue = useWatch({ control, name: 'email' }) ?? '';
+  const passwordValue = useWatch({ control, name: 'password' }) ?? '';
 
   const getFieldState = (
     name: keyof LoginFormValues,

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, type SubmitErrorHandler } from 'react-hook-form';
+import { useForm, useWatch, type SubmitErrorHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Link } from 'react-router-dom';
@@ -44,7 +44,7 @@ export const RegisterForm = ({
     register,
     handleSubmit,
     setFocus,
-    watch,
+    control,
     formState: { errors, touchedFields },
   } = useForm<RegisterFormValues>({
     resolver: yupResolver(schema),
@@ -53,10 +53,10 @@ export const RegisterForm = ({
     reValidateMode: 'onChange',
   });
 
-  const nameValue = watch('name');
-  const emailValue = watch('email');
-  const passwordValue = watch('password');
-  const confirmValue = watch('confirmPassword');
+  const nameValue = useWatch({ control, name: 'name' }) ?? '';
+  const emailValue = useWatch({ control, name: 'email' }) ?? '';
+  const passwordValue = useWatch({ control, name: 'password' }) ?? '';
+  const confirmValue = useWatch({ control, name: 'confirmPassword' }) ?? '';
 
   const getFieldState = (
     name: keyof RegisterFormValues,

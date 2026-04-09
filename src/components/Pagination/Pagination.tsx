@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styles from './Pagination.module.css';
 
 interface PaginationProps {
@@ -6,21 +7,34 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-/** Build the visible page tokens: numbers + '…' ellipsis markers. */
-const buildPages = (current: number, total: number): (number | '…')[] => {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+const MOBILE_MQ = '(max-width: 767px)';
 
-  const pages: (number | '…')[] = [1];
+const getIsMobile = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia(MOBILE_MQ).matches;
+};
 
-  if (current > 3)              pages.push('…');
-  for (
-    let i = Math.max(2, current - 1);
-    i <= Math.min(total - 1, current + 1);
-    i++
-  ) pages.push(i);
-  if (current < total - 2)      pages.push('…');
+/** Build the visible page tokens: numbers + '…' ellipsis markers (no explicit last page button). */
+const buildPages = (current: number, total: number, maxNumbers: number): (number | '…')[] => {
+  if (total <= maxNumbers) return Array.from({ length: total }, (_, i) => i + 1);
 
-  pages.push(total);
+  // Keep current page always visible, plus neighbors up to maxNumbers.
+  const half = Math.floor((maxNumbers - 1) / 2);
+  let start = Math.max(1, current - half);
+  let end = start + maxNumbers - 1;
+
+  if (end > total) {
+    end = total;
+    start = end - maxNumbers + 1;
+  }
+
+  const pages: (number | '…')[] = [];
+  for (let p = start; p <= end; p++) pages.push(p);
+
+  // Add ellipsis markers when there are hidden pages at either end.
+  if (start > 1) pages.unshift('…');
+  if (end < total) pages.push('…');
+
   return pages;
 };
 
@@ -29,9 +43,24 @@ export const Pagination = ({
   totalPages,
   onPageChange,
 }: PaginationProps): React.ReactElement | null => {
+  const [mobile, setMobile] = useState(getIsMobile);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const mq = window.matchMedia(MOBILE_MQ);
+    const handler = () => setMobile(mq.matches);
+
+    handler();
+
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
   if (totalPages <= 1) return null;
 
-  const pages = buildPages(currentPage, totalPages);
+  const maxNumbers = mobile ? 2 : 3;
+  const pages = buildPages(currentPage, totalPages, maxNumbers);
 
   const isFirst = currentPage === 1;
   const isLast  = currentPage === totalPages;
