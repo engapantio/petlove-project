@@ -1,4 +1,5 @@
 import { type FormEvent, type ChangeEvent, useRef } from 'react';
+import { Icon } from '../Icon/Icon';
 import styles from './SearchField.module.css';
 
 interface SearchFieldProps {
@@ -64,11 +65,7 @@ export const SearchField = ({
             className={`${styles.iconBtn} ${styles.clearBtn}`}
             aria-label="Clear search"
           >
-            {/* inline ✕ svg for zero-dependency portability */}
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              <line x1="14" y1="2" x2="2" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <Icon id="cross-small" width={16} height={16} />
           </button>
         )}
 
@@ -78,10 +75,7 @@ export const SearchField = ({
           className={`${styles.iconBtn} ${styles.searchBtn}`}
           aria-label="Submit search"
         >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
-            <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="2"/>
-            <line x1="13.5" y1="13.5" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
+          <Icon id="search" width={20} height={20} />
         </button>
       </div>
     </form>

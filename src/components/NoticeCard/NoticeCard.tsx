@@ -12,8 +12,9 @@ interface NoticeCardProps {
   fallbackImageSrc?: string;
 }
 
-const formatBirthday = (birthday: string): string => {
-  const raw = birthday.trim();
+const formatBirthday = (birthday: string | null | undefined): string => {
+  const raw = (birthday ?? '').trim();
+  if (!raw) return '';
   // API commonly returns YYYY-MM-DD; Figma expects mm.dd.yyyy.
   if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
     const [yyyy, mm, dd] = raw.split('-');
@@ -24,16 +25,16 @@ const formatBirthday = (birthday: string): string => {
 
   // Best-effort parse for ISO strings; fallback to original string.
   const d = new Date(raw);
-  if (Number.isNaN(d.getTime())) return birthday;
+  if (Number.isNaN(d.getTime())) return birthday ?? '';
   const mm = String(d.getMonth() + 1).padStart(2, '0');
   const dd = String(d.getDate()).padStart(2, '0');
   const yyyy = String(d.getFullYear());
   return `${mm}.${dd}.${yyyy}`;
 };
 
-const capitalizeFirst = (s: string): string => {
-  const v = s.trim();
-  if (!v) return s;
+const capitalizeFirst = (s: string | null | undefined): string => {
+  const v = (s ?? '').trim();
+  if (!v) return s ?? '';
   return v.charAt(0).toUpperCase() + v.slice(1);
 };
 
@@ -112,7 +113,7 @@ export const NoticeCard = ({
         <ul className={css.meta} aria-label="Notice details">
           <li className={css.metaItem}>
             <span className={css.metaLabel}>Name</span>
-            <span className={css.metaValue}>{item.name}</span>
+            <span className={css.metaValue}>{item.name ?? ''}</span>
           </li>
           <li className={css.metaItem}>
             <span className={css.metaLabel}>Birthday</span>
@@ -134,8 +135,8 @@ export const NoticeCard = ({
           </li>
         </ul>
 
-        <p className={css.comment} title={item.comment}>
-          {item.comment}
+        <p className={css.comment} title={item.comment ?? ''}>
+          {item.comment ?? ''}
         </p>
 
         <div className={css.footer}>

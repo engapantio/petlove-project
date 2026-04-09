@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Icon } from '../Icon/Icon';
 import styles from './Pagination.module.css';
 
 interface PaginationProps {
@@ -65,7 +66,7 @@ export const Pagination = ({
   const isFirst = currentPage === 1;
   const isLast  = currentPage === totalPages;
 
-  const nav = (label: string, page: number, disabled: boolean, symbol: string) => (
+  const nav = (label: string, page: number, disabled: boolean, iconId: Parameters<typeof Icon>[0]['id']) => (
     <button
       key={label}
       type="button"
@@ -74,14 +75,14 @@ export const Pagination = ({
       disabled={disabled}
       aria-label={label}
     >
-      {symbol}
+      <Icon id={iconId} width={20} height={20} />
     </button>
   );
 
   return (
     <nav aria-label="Pagination" className={styles.root}>
-      {nav('First page',    1,               isFirst, '«')}
-      {nav('Previous page', currentPage - 1, isFirst, '‹')}
+      {nav('First page',    1,               isFirst, 'arrow-first')}
+      {nav('Previous page', currentPage - 1, isFirst, 'arrow-left')}
 
       {pages.map((p, idx) =>
         p === '…' ? (
@@ -102,8 +103,8 @@ export const Pagination = ({
         ),
       )}
 
-      {nav('Next page',  currentPage + 1, isLast, '›')}
-      {nav('Last page',  totalPages,      isLast, '»')}
+      {nav('Next page',  currentPage + 1, isLast, 'arrow-right')}
+      {nav('Last page',  totalPages,      isLast, 'arrow-last')}
     </nav>
   );
 };

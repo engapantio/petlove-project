@@ -63,12 +63,12 @@
     grid-column: 1 / -1;
   }
 
-  .selectWrap:nth-of-type(1),
-  .selectWrap:nth-of-type(2) {
+  .category,
+  .gender {
     grid-column: span 1;
   }
 
-  .selectWrap:nth-of-type(3),
+  .type,
   .locationWrap {
     grid-column: 1 / -1;
   }
@@ -86,15 +86,15 @@
     grid-column: 1;
   }
 
-  .selectWrap:nth-of-type(1) {
+  .category {
     grid-column: 2;
   }
 
-  .selectWrap:nth-of-type(2) {
+  .gender {
     grid-column: 3;
   }
 
-  .selectWrap:nth-of-type(3) {
+  .type {
     grid-column: 1;
   }
 
@@ -126,7 +126,7 @@
   width: 100%;
   height: 48px;
   padding: 0 14px;
-  border: none;
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-ui);
   background: #ffffff;
   color: #262626;
@@ -135,6 +135,98 @@
   line-height: 20px;
   letter-spacing: -0.48px;
   outline: none;
+}
+
+.fieldSelect {
+  width: 100%;
+}
+
+.selectChevron {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20width%3D%2718%27%20height%3D%2718%27%20viewBox%3D%270%200%2018%2018%27%20fill%3D%27none%27%3E%3Cpath%20d%3D%27M4.5%206.75L9%2011.25L13.5%206.75%27%20stroke%3D%27%23262626%27%20stroke-opacity%3D%270.5%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18px 18px;
+}
+
+/* react-select for Category/Gender/Type — match Figma dropdown + option styles */
+.fieldSelect :global(.field__control) {
+  min-height: 48px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-ui);
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.fieldSelect :global(.field__control--is-focused) {
+  border-color: transparent;
+  box-shadow: var(--shadow-focus);
+}
+
+.fieldSelect :global(.field__value-container) {
+  padding: 0 0 0 14px;
+}
+
+.fieldSelect :global(.field__single-value),
+.fieldSelect :global(.field__placeholder) {
+  margin: 0;
+  font-family: Manrope, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.48px;
+  color: #262626;
+}
+
+.fieldSelect :global(.field__placeholder) {
+  color: #262626;
+}
+
+.fieldSelect :global(.field__indicators) {
+  padding-right: 14px;
+}
+
+.fieldSelect :global(.field__dropdown-indicator) {
+  padding: 0;
+}
+
+.fieldSelect :global(.field__menu) {
+  margin-top: 6px;
+  background: #ffffff;
+  border-radius: 15px; /* Figma dropdown panel radius */
+  box-shadow: 0 8px 24px rgba(38, 38, 38, 0.08);
+  overflow: hidden;
+}
+
+.fieldSelect :global(.field__menu-list) {
+  padding: 14px; /* Figma inner padding */
+}
+
+.fieldSelect :global(.field__option) {
+  padding: 4px 0; /* 20px line + 8px spacing rhythm */
+  font-family: Manrope, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.48px;
+  color: rgba(38, 38, 38, 0.6);
+  background: transparent;
+}
+
+.fieldSelect :global(.field__option:first-of-type) {
+  color: #f6b83d; /* Figma: "Show all" */
+}
+
+.fieldSelect :global(.field__option--is-focused) {
+  background: rgba(246, 184, 61, 0.12);
+  color: rgba(38, 38, 38, 0.6);
+}
+
+.fieldSelect :global(.field__option--is-selected) {
+  background: transparent;
+  color: #f6b83d; /* Figma selected option color */
 }
 
 .select {
@@ -156,6 +248,93 @@
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 18px 18px;
+}
+
+.locationSelect {
+  width: 100%;
+}
+
+/* react-select (AsyncSelect) — keep it visually identical to the other inputs */
+.locationSelect :global(.location__control) {
+  min-height: 48px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-ui);
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.locationSelect :global(.location__control--is-focused) {
+  border-color: transparent;
+  box-shadow: var(--shadow-focus);
+}
+
+.locationSelect :global(.location__value-container) {
+  padding: 0;
+  padding-left: 14px;
+}
+
+.locationSelect :global(.location__input-container),
+.locationSelect :global(.location__single-value),
+.locationSelect :global(.location__placeholder) {
+  margin: 0;
+  color: #262626;
+  font-size: 16px;
+  font-weight: var(--font-weight-medium);
+  line-height: 20px;
+  letter-spacing: -0.48px;
+}
+
+.locationSelect :global(.location__placeholder) {
+  color: #262626;
+}
+
+.locationSelect :global(.location__indicator-separator) {
+  display: none;
+}
+
+.locationSelect :global(.location__indicators) {
+  padding-right: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(38, 38, 38, 0.5);
+}
+
+.locationSelect :global(.location__menu) {
+  margin-top: 6px;
+  border-radius: var(--radius-ui);
+  overflow: hidden;
+}
+
+.locationSelect :global(.location__option) {
+  font-size: 14px;
+  font-weight: var(--font-weight-medium);
+}
+
+.locationClearBtn {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: rgba(38, 38, 38, 0.5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.locationClearBtn:hover {
+  color: rgba(38, 38, 38, 0.7);
+}
+
+.locationSearchIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(38, 38, 38, 0.5);
 }
 
 .location::placeholder {
@@ -187,6 +366,26 @@
     padding-right: 30px;
     background-position: right 12px center;
   }
+
+  .locationSelect :global(.location__control) {
+    min-height: 42px;
+  }
+
+  .locationSelect :global(.location__input-container),
+  .locationSelect :global(.location__single-value),
+  .locationSelect :global(.location__placeholder) {
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.42px;
+  }
+
+  .locationSelect :global(.location__indicators) {
+    padding-right: 12px;
+  }
+
+  .locationSelect :global(.location__value-container) {
+    padding-left: 12px;
+  }
 }
 
 .sortRow {
@@ -205,7 +404,7 @@
 .pill {
   height: 48px;
   padding: 0 14px;
-  border: none;
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-ui);
   background: #ffffff;
   color: #262626;
@@ -215,10 +414,23 @@
   letter-spacing: -0.48px;
   cursor: pointer;
   transition: var(--transition-colors);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .pill:hover {
   background: var(--color-surface-hover);
+}
+
+.pill:active {
+  background: #ffffff;
+}
+
+.pillActive:hover,
+.pillActive:active {
+  background: var(--color-primary);
 }
 
 .pill:focus-visible {
@@ -230,6 +442,20 @@
   background: var(--color-primary);
   color: var(--color-text-inverse);
   font-weight: var(--font-weight-bold);
+  border-color: transparent;
+}
+
+.pillText {
+  display: inline-block;
+}
+
+.pillIcon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
 }
 
 /* Mobile: 42px pills */
@@ -244,7 +470,7 @@
 }
 
 .pillPopular {
-  width: 83px;
+  width: 109px;
 }
 
 .pillUnpopular {

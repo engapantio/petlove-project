@@ -6,7 +6,8 @@
   flex-wrap: nowrap;
   white-space: nowrap;
   padding: var(--space-4) 0;
-  overflow-x: auto;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .btn {
@@ -70,6 +71,31 @@
   cursor: default;
   user-select: none;
   flex: 0 0 auto;
+}
+
+@media (max-width: 767px) {
+  .root {
+    gap: var(--space-2);
+  }
+
+  .btn,
+  .ellipsis {
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0 var(--space-1);
+  }
+
+  .btn {
+    font-size: var(--text-md);
+  }
+
+  .nav {
+    font-size: var(--text-md);
+  }
+
+  .ellipsis {
+    font-size: var(--text-lg);
+  }
 }
 
 @media (min-width: 768px) {

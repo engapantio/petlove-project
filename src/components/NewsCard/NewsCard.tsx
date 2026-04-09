@@ -44,8 +44,8 @@ export const NewsCard = ({
             src={imgUrl}
             alt={title}
             className={css.image}
-            width={361}
-            height={226}
+            width={335}
+            height={190}
             loading="lazy"
             onError={() => setIsImgBroken(true)}
           />

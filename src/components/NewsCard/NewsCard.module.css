@@ -43,6 +43,12 @@
   line-height: 20px;
   letter-spacing: -0.48px;
   color: #262626;
+
+  height: 40px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .excerpt {
@@ -112,6 +118,7 @@
     font-size: 20px;
     line-height: 26px;
     letter-spacing: -0.6px;
+    height: 52px;
   }
 
   .excerpt,
