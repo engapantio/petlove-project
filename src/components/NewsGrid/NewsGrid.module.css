@@ -1,0 +1,31 @@
+.grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: 335px;
+  justify-content: center;
+  row-gap: 32px;
+}
+
+.item {
+  margin: 0;
+  align-self: stretch;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 340px 340px;
+    column-gap: 24px;
+    row-gap: 32px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .grid {
+    grid-template-columns: 361px 361px 361px;
+    column-gap: 35px;
+    row-gap: 40px;
+  }
+}
