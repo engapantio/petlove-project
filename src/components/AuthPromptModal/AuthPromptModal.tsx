@@ -31,7 +31,15 @@ export const AuthPromptModal = ({ isOpen, onClose }: AuthPromptModalProps): Reac
       <div className={css.root}>
         <div className={css.iconWrap} aria-hidden="true">
           <div className={css.iconCircle}>
-            <span className={css.emoji}>🐶</span>
+            <img
+              className={css.authPetImg}
+              src="/images/dog.webp"
+              alt=""
+              width={80}
+              height={80}
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         </div>
 

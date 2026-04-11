@@ -3,10 +3,18 @@ import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { logout } from '../../store/slices/authSlice';
+import { Icon } from '../Icon/Icon';
 import { NavMenu, MENU_ID } from './NavMenu';
 import styles from './Header.module.css';
 
-const Header = () => {
+export type HeaderSurface = 'default' | 'homePrimary';
+
+interface HeaderProps {
+  /** On Home hero orange card: transparent bar, light nav (Figma Home). */
+  surface?: HeaderSurface;
+}
+
+const Header = ({ surface = 'default' }: HeaderProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,16 +64,41 @@ const Header = () => {
     navigate('/home');
   };
 
+  const onPrimary = surface === 'homePrimary';
+
   const navClass = ({ isActive }: { isActive: boolean }) =>
-    [styles.navLink, isActive ? styles.navLinkActive : ''].filter(Boolean).join(' ');
+    [
+      styles.navLink,
+      onPrimary && styles.navLinkOnPrimary,
+      isActive && (onPrimary ? styles.navLinkActiveOnPrimary : styles.navLinkActive),
+    ]
+      .filter(Boolean)
+      .join(' ');
 
   const userInitial = user?.name?.charAt(0)?.toUpperCase() ?? '?';
 
   return (
-    <header className={styles.header}>
+    <header
+      className={[styles.header, onPrimary && styles.headerHomePrimary].filter(Boolean).join(' ')}
+    >
       <div className={styles.headerInner}>
-        <NavLink to="/home" className={styles.logo} aria-label="Petlove home">
-          <span>petl❤️ve</span>
+        <NavLink
+          to="/home"
+          className={[styles.logo, onPrimary && styles.logoOnPrimary].filter(Boolean).join(' ')}
+          aria-label="Petlove home"
+        >
+          <span className={styles.logoWordmark}>
+            petl
+            <Icon
+              id="heart-filled"
+              width={28}
+              height={28}
+              className={[styles.logoHeart, onPrimary && styles.logoHeartOnPrimary]
+                .filter(Boolean)
+                .join(' ')}
+            />
+            ve
+          </span>
         </NavLink>
 
         <nav className={styles.navDesktop} aria-label="Main navigation">
@@ -82,10 +115,16 @@ const Header = () => {
 
         <div className={styles.headerTrailing}>
           {isLoggedIn ? (
-            <div className={styles.authBlock}>
+            <div
+              className={[styles.authBlock, onPrimary && styles.authBlockOnPrimary]
+                .filter(Boolean)
+                .join(' ')}
+            >
               <NavLink
                 to="/profile"
-                className={styles.avatarLink}
+                className={[styles.avatarLink, onPrimary && styles.avatarLinkOnPrimary]
+                  .filter(Boolean)
+                  .join(' ')}
                 aria-label={`Profile: ${user?.name ?? 'My profile'}`}
               >
                 <span className={styles.avatarCircle} aria-hidden="true">
@@ -95,14 +134,21 @@ const Header = () => {
               </NavLink>
               <button
                 type="button"
-                className={styles.logoutBtnHeader}
+                className={[styles.logoutBtnHeader, onPrimary && styles.logoutBtnHeaderOnPrimary]
+                  .filter(Boolean)
+                  .join(' ')}
                 onClick={() => void handleLogout()}
               >
                 LOG OUT
               </button>
             </div>
           ) : (
-            <div className={styles.authBar} aria-label="Account">
+            <div
+              className={[styles.authBar, onPrimary && styles.authBarOnPrimary]
+                .filter(Boolean)
+                .join(' ')}
+              aria-label="Account"
+            >
               <NavLink to="/login" className="pl-btn pl-btn--primary">
                 LOG IN
               </NavLink>
@@ -114,7 +160,7 @@ const Header = () => {
 
           <button
             type="button"
-            className={styles.burger}
+            className={[styles.burger, onPrimary && styles.burgerOnPrimary].filter(Boolean).join(' ')}
             onClick={() =>
               setMenuOpen((o) => {
                 const next = !o;

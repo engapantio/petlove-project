@@ -18,6 +18,7 @@ const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const LoginPage    = lazy(() => import('./pages/LoginPage'));
 const ProfilePage  = lazy(() => import('./pages/ProfilePage'));
 const AddPetPage   = lazy(() => import('./pages/AddPetPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 // ── App ───────────────────────────────────────────────────────────────────────
 const App = () => {
@@ -32,7 +33,13 @@ const App = () => {
 
   return (
     <>
-      <Suspense fallback={<div aria-busy="true">Loading…</div>}>
+      <Suspense
+        fallback={
+          <div className="appRouteLoading appRouteLoading--main" aria-busy="true" role="status">
+            Loading…
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<Layout />}>
             {/* Public */}
@@ -63,7 +70,7 @@ const App = () => {
             />
 
             {/* Catch-all */}
-            <Route path="*" element={<Navigate to="/home" replace />} />
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>
       </Suspense>

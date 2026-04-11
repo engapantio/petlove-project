@@ -73,6 +73,20 @@
   border-radius: var(--radius-sm);
 }
 
+.logoWordmark {
+  white-space: nowrap;
+}
+
+/* Figma brand heart: primary orange (not system-red emoji) */
+.logoHeart {
+  display: inline-block;
+  color: var(--color-primary);
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.2em;
+  margin-inline: -0.03em;
+}
+
 .navDesktop {
   display: none;
 }
@@ -326,4 +340,104 @@
     grid-column: 3;
     justify-self: end;
   }
+}
+
+/* ── Home: embedded in orange card. No horizontal padding on the bar — HomePage
+   `.blockOrange` supplies the Figma card inset (20 / 32 / 64px) for Header + hero.
+   Top padding 0 so shell + header don’t double the offset vs other routes. ─ */
+.headerHomePrimary {
+  background: transparent;
+  padding-inline: 0;
+  padding-top: 0;
+  padding-bottom: var(--space-4);
+}
+
+.logoOnPrimary {
+  color: var(--color-surface);
+}
+
+.logoHeartOnPrimary {
+  color: var(--color-surface);
+}
+
+.navLinkOnPrimary {
+  border-color: rgb(255 255 255 / 0.85);
+  background: transparent;
+  color: var(--color-surface);
+}
+
+.navLinkOnPrimary:hover {
+  border-color: var(--color-surface);
+  background: rgb(255 255 255 / 0.12);
+}
+
+.navLinkOnPrimary:focus-visible {
+  outline-color: var(--color-surface);
+}
+
+.navLinkActiveOnPrimary {
+  border-color: var(--color-surface);
+  background: rgb(255 255 255 / 0.18);
+}
+
+.burgerOnPrimary {
+  color: var(--color-surface);
+}
+
+.burgerOnPrimary:hover {
+  background: rgb(255 255 255 / 0.12);
+}
+
+.burgerOnPrimary:focus-visible {
+  outline-color: var(--color-surface);
+}
+
+.authBarOnPrimary :global(a.pl-btn.pl-btn--primary) {
+  background: transparent;
+  border-color: rgb(255 255 255 / 0.95);
+  color: var(--color-surface);
+}
+
+.authBarOnPrimary :global(a.pl-btn.pl-btn--primary):hover {
+  background: rgb(255 255 255 / 0.12);
+  border-color: var(--color-surface);
+}
+
+.authBarOnPrimary :global(a.pl-btn.pl-btn--secondary) {
+  background: var(--color-surface);
+  border-color: var(--color-surface);
+  color: var(--color-primary-active);
+}
+
+.authBarOnPrimary :global(a.pl-btn.pl-btn--secondary):hover {
+  background: rgb(255 255 255 / 0.92);
+  border-color: rgb(255 255 255 / 0.92);
+  color: var(--color-primary-hover);
+}
+
+.authBlockOnPrimary .avatarLinkOnPrimary {
+  color: var(--color-surface);
+}
+
+.authBlockOnPrimary .avatarLinkOnPrimary:focus-visible {
+  outline-color: var(--color-surface);
+}
+
+.authBlockOnPrimary .avatarName {
+  color: var(--color-surface);
+}
+
+.logoutBtnHeaderOnPrimary {
+  background: transparent;
+  border-color: rgb(255 255 255 / 0.9);
+  color: var(--color-surface);
+}
+
+.logoutBtnHeaderOnPrimary:hover {
+  background: rgb(255 255 255 / 0.12);
+  border-color: var(--color-surface);
+}
+
+.logoutBtnHeaderOnPrimary:focus-visible {
+  outline-color: var(--color-surface);
 }

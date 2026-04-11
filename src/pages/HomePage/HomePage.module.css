@@ -1,0 +1,271 @@
+/* Home: Login shell + grid widths; orange card + photo card. Spacing aligned with LoginPage shell / grid gaps. */
+
+/* Page inset; Figma ~16px from viewport top (≤20px). Bottom keeps breathing room. */
+.shell {
+  box-sizing: border-box;
+  width: 100%;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-6);
+  padding-inline: var(--container-padding-x);
+}
+
+/* Same widths as Login `.grid`: 335 / 704 / 1216. Figma: orange + photo touch — no gap. */
+.stack {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-inline: auto;
+  gap: 0;
+}
+
+@media (min-width: 375px) {
+  .stack {
+    max-width: 20.9375rem; /* 335px */
+  }
+}
+
+/* Figma orange blocks: horizontal inset on card so Header + headline share one column.
+   55812:1096 mobile 20px | 55801:1090 tablet 32px | 55701:6489 desktop 64px */
+.blockOrange {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 17.5rem;
+  padding-inline: 1.25rem;
+  padding-top: 0;
+  border-radius: var(--radius-ui);
+  background-color: var(--color-primary);
+  overflow: hidden;
+}
+
+.blockOrangeBody {
+  box-sizing: border-box;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-inline: 0;
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-8);
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* Figma: 55812:1097 mobile / 55801:1091 tablet / 55701:6493 desktop — Manrope ExtraBold 800 */
+.headline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 3.125rem;
+  font-weight: 800;
+  line-height: 3rem;
+  letter-spacing: -1.5px;
+  color: var(--color-surface);
+}
+
+.headlineLine {
+  display: block;
+  margin: 0;
+}
+
+/* Muted orange accent for “care” */
+.care {
+  color: color-mix(in srgb, var(--color-primary) 68%, #ffffff 32%);
+}
+
+.headlineTabletDesktop {
+  display: none;
+}
+
+.headlineMobile {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .headlineMobile {
+    display: none;
+  }
+
+  .headlineTabletDesktop {
+    display: block;
+  }
+}
+
+/* Figma: 55812:1098 mobile | 55801:1092 / 55701:6525 tablet+ — Manrope Medium 500 */
+.lead {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.125rem;
+  letter-spacing: -0.28px;
+  color: var(--color-surface);
+  text-align: left;
+  text-wrap: pretty;
+}
+
+/* Login mobile hero image height — photo block only */
+.blockPhoto {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 17.5rem;
+  border-radius: var(--radius-ui);
+  overflow: hidden;
+  background-color: var(--color-primary-muted);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  background-image: image-set(
+    url('/images/Mobile-Home-image.webp') 1x,
+    url('/images/Mobile-Home-image@2x.webp') 2x
+  );
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .shell {
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-8);
+    padding-inline: 2rem;
+  }
+
+  .stack {
+    max-width: 44rem; /* 704px */
+  }
+
+  .blockOrange,
+  .blockPhoto {
+    border-radius: var(--radius-auth-card);
+  }
+
+  .blockOrange {
+    min-height: 18.875rem;
+    padding-inline: 2rem;
+  }
+
+  .blockOrangeBody {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-10);
+  }
+
+  /* Login tablet hero panel height */
+  .blockPhoto {
+    min-height: 18.875rem;
+    background-image: image-set(
+      url('/images/Tablet-Home-image.webp') 1x,
+      url('/images/Tablet-Home-image@2x.webp') 2x
+    );
+  }
+
+  .copy {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+    gap: var(--space-6);
+    align-items: start;
+    min-height: 0;
+  }
+
+  .headline {
+    grid-row: 1;
+    align-self: start;
+    font-size: 5rem;
+    line-height: 4.8125rem;
+    letter-spacing: -2.4px;
+  }
+
+  .lead {
+    grid-row: 2;
+    align-self: end;
+    justify-self: start;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 15.9375rem;
+    margin-inline-start: auto;
+    font-size: var(--text-lg);
+    line-height: 1.375rem;
+    letter-spacing: -0.36px;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1280px) {
+  .shell {
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-8);
+    padding-inline: 2rem;
+  }
+
+  .stack {
+    max-width: 76rem; /* 1216px */
+  }
+
+  .blockOrange,
+  .blockPhoto {
+    border-radius: var(--radius-auth-card);
+  }
+
+  .blockOrange {
+    min-height: 26rem;
+    padding-inline: var(--space-16);
+  }
+
+  .blockOrangeBody {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-12);
+  }
+
+  .blockPhoto {
+    min-height: 26rem;
+    background-image: image-set(
+      url('/images/Desktop-Home-image.webp') 1x,
+      url('/images/Desktop-Home-image@2x.webp') 2x
+    );
+  }
+
+  .copy {
+    flex: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+    grid-template-rows: auto;
+    gap: var(--space-8) var(--space-10);
+    align-items: end;
+    min-height: 0;
+  }
+
+  /* Headline and lead share one row: title left, lead right, bottoms aligned. */
+  .headline {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: end;
+    max-width: 100%;
+    min-width: 0;
+    font-size: 5.625rem;
+    line-height: 5.4375rem;
+    letter-spacing: -2.7px;
+  }
+
+  .headlineTabletDesktop .headlineLine:first-child {
+    white-space: nowrap;
+  }
+
+  .lead {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: end;
+    justify-self: end;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 15.9375rem;
+    margin-inline-start: auto;
+    font-size: var(--text-lg);
+    line-height: 1.375rem;
+    letter-spacing: -0.36px;
+    text-align: left;
+  }
+}

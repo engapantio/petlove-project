@@ -5,9 +5,6 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { register as registerUser } from '../../store/slices/authSlice';
 import styles from './RegisterPage.module.css';
 
-const REGISTER_HERO_SRC =
-  'https://images.unsplash.com/photo-1574158622682-e40e69881006?auto=format&fit=crop&w=1400&q=85';
-
 const RegisterPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -28,19 +25,17 @@ const RegisterPage = () => {
     <div className={styles.shell}>
       <div className={styles.grid}>
         <section className={styles.hero} aria-label="Featured pet">
-          <img
-            className={styles.heroImage}
-            src={REGISTER_HERO_SRC}
-            alt="Cute cat, Petlove registration illustration"
-            width={1184}
-            height={1308}
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
           <aside className={styles.petCard}>
             <div className={styles.petAvatar} aria-hidden="true">
-              🐈
+              <img
+                className={styles.petAvatarImg}
+                src="/images/cat.webp"
+                alt=""
+                width={60}
+                height={60}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <div className={styles.petCardHeader}>
               <p className={styles.petName}>Jack</p>

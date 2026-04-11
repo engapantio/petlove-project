@@ -30,13 +30,10 @@
   justify-content: center;
 }
 
-.emoji {
-  color: #ffffff;
-  font-family: Manrope, system-ui, -apple-system, sans-serif;
-  font-weight: 800;
-  font-size: 44px;
-  line-height: 44px;
-  letter-spacing: -1.76px;
+.authPetImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .textBlock {

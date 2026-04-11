@@ -5,10 +5,6 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { login } from '../../store/slices/authSlice';
 import styles from './LoginPage.module.css';
 
-/** Hero photo — replace with a bundled asset under `public/images/` for production. */
-const LOGIN_HERO_SRC =
-  'https://images.unsplash.com/photo-1612536843160-fbffe7d01233?auto=format&fit=crop&w=1400&q=85';
-
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -28,19 +24,17 @@ const LoginPage = () => {
     <div className={styles.shell}>
       <div className={styles.grid}>
         <section className={styles.hero} aria-label="Featured pet">
-          <img
-            className={styles.heroImage}
-            src={LOGIN_HERO_SRC}
-            alt="Happy corgi dog, Petlove login illustration"
-            width={1184}
-            height={1308}
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
           <aside className={styles.petCard}>
             <div className={styles.petAvatar} aria-hidden="true">
-              🐶
+              <img
+                className={styles.petAvatarImg}
+                src="/images/dog.webp"
+                alt=""
+                width={60}
+                height={60}
+                loading="lazy"
+                decoding="async"
+              />
             </div>
             <div className={styles.petCardHeader}>
               <p className={styles.petName}>Rich</p>

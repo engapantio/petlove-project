@@ -1,0 +1,45 @@
+/**
+ * Global route-level visuals only.
+ * Login / Registration hero art lives on each page’s `.hero` in `*Page.module.css` (scoped panel).
+ * Mapping reference: `src/config/pageBackgroundAssets.ts`
+ */
+
+/* Route lazy-load fallback (outside layout — full viewport) */
+.appRouteLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100dvh;
+  margin: 0;
+  background-color: var(--color-bg-page);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.appRouteLoading--main {
+  background-image: image-set(
+    url('/images/Mobile-Main-image.webp') 1x,
+    url('/images/Mobile-Main-image@2x.webp') 2x
+  );
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .appRouteLoading--main {
+    background-image: image-set(
+      url('/images/Tablet-Main-image.webp') 1x,
+      url('/images/Tablet-Main-image@2x.webp') 2x
+    );
+  }
+}
+
+@media (min-width: 1280px) {
+  .appRouteLoading--main {
+    background-image: image-set(
+      url('/images/Desktop-Main-image.webp') 1x,
+      url('/images/Desktop-Main-image@2x.webp') 2x
+    );
+  }
+}
