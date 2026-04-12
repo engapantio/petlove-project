@@ -1,15 +1,19 @@
 import { Outlet, useLocation } from 'react-router-dom';
+import { Loader } from '../Loader';
 import Header from './Header';
 
 const isHomeRoute = (pathname: string): boolean =>
   pathname === '/home' || pathname === '/';
 
+const isMainRoute = (pathname: string): boolean => pathname === '/main';
+
 const Layout = () => {
   const { pathname } = useLocation();
-  const showGlobalHeader = !isHomeRoute(pathname);
+  const showGlobalHeader = !isHomeRoute(pathname) && !isMainRoute(pathname);
 
   return (
     <div className="pl-layout">
+      <Loader />
       {showGlobalHeader && <Header />}
       <main className="pl-main">
         <Outlet />

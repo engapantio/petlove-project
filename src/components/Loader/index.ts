@@ -1,1 +1,1 @@
-export { Loader } from './Loader';
+export { Loader, RouteLoaderFallback } from './Loader';

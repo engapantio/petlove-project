@@ -1,0 +1,68 @@
+/**
+ * Fixed artboard hero + 30% scrim — shared by Main + Loader (Figma Main / Loading backgrounds).
+ */
+
+.wrap {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.bgStack {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 375px;
+  height: 812px;
+  overflow: hidden;
+}
+
+.bgPicture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.bgImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgb(0 0 0 / 0.3);
+}
+
+/* Fill the fixed artboard so in-flow height isn’t 0 (absolute children alone collapse % height). */
+.content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+@media (min-width: 768px) and (max-width: 1279px) {
+  .bgStack {
+    width: 768px;
+    height: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .bgStack {
+    width: 1280px;
+    height: 800px;
+  }
+}

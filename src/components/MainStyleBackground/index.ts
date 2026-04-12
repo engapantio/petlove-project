@@ -1,0 +1,1 @@
+export { MainStyleBackground } from './MainStyleBackground';

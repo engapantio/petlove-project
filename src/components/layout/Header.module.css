@@ -304,7 +304,8 @@
 
   .headerInner {
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    /* minmax(0,1fr): avoid grid min-content blowout (authorized nav + wide auth cluster). */
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
     column-gap: var(--header-desktop-columns-gap);
     max-width: 76rem; /* 1216px — match Login desktop .grid (592×2 + 32) */
@@ -339,6 +340,11 @@
   .authBlock {
     grid-column: 3;
     justify-self: end;
+    min-width: 0;
+  }
+
+  .authBlock .avatarLink {
+    min-width: 0;
   }
 }
 

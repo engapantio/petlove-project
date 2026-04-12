@@ -155,13 +155,14 @@ export interface NewsState {
 export interface Friend {
   _id: string;
   title: string;
-  url: string;
-  addressUrl: string;
+  /** Partner site; may be null from API */
+  url: string | null;
+  addressUrl: string | null;
   imageUrl: string;
-  address: string;
-  workDays: WorkDay[];
-  phone: string;
-  email: string;
+  address: string | null;
+  workDays: WorkDay[] | null;
+  phone: string | null;
+  email: string | null;
 }
 
 export interface WorkDay {

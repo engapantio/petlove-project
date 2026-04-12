@@ -1,0 +1,202 @@
+/**
+ * Friends partner card — from Figma frames 55812:1566 (mobile), 55807:509 (tablet), 55714:4906 (desktop).
+ * Card: white fill, 15px radius, no stroke. Contacts: Email → Address → Phone; label 50% #262626, value full.
+ */
+
+.card {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 335px;
+  margin-inline: auto;
+  min-height: 184px;
+  background: #ffffff;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .card {
+    max-width: 342px;
+    min-height: 196px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .card {
+    max-width: 371px;
+    min-height: 196px;
+  }
+}
+
+.cardInteractive {
+  cursor: pointer;
+}
+
+.cardInteractive:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Schedule chip — #fff4df, 30px radius; position top-right per Figma */
+.schedulePill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 6px 8px;
+  border-radius: 30px;
+  background: #fff4df;
+  max-width: calc(100% - 24px - 100px);
+}
+
+@media (min-width: 768px) {
+  .schedulePill {
+    min-height: 34px;
+    padding: 7px 8px;
+    max-width: calc(100% - 24px - 110px);
+  }
+}
+
+.scheduleText {
+  margin: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.24px;
+  color: #f6b83d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 768px) {
+  .scheduleText {
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.28px;
+  }
+}
+
+.inner {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  column-gap: 14px;
+  padding: 40px 12px 40px 20px;
+}
+
+.avatarWrap {
+  flex-shrink: 0;
+}
+
+.avatar {
+  display: block;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--color-surface-muted);
+}
+
+@media (min-width: 768px) {
+  .avatar {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.name {
+  margin: 0;
+  padding-right: 6px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: -0.64px;
+  color: #262626;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .name {
+    font-size: 20px;
+    line-height: 26px;
+    letter-spacing: -0.8px;
+  }
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contactRow {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: baseline;
+  column-gap: var(--space-2);
+  min-width: 0;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+}
+
+.label {
+  flex-shrink: 0;
+  color: rgb(38 38 38 / 0.5);
+}
+
+.valueCell {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.value,
+.valueLink {
+  display: block;
+  color: #262626;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Address is pre-shortened in JS — no ellipsis / no "..." */
+.valueCellAddress .valueAddress,
+.valueCellAddress .valueLinkAddress {
+  text-overflow: clip;
+}
+
+.valueLink {
+  text-decoration: none;
+}
+
+.valueLink:hover,
+.valueLink:focus-visible {
+  color: var(--color-primary-active);
+}
+
+.valueLink:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

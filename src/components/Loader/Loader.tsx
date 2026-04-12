@@ -1,48 +1,76 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
+import type { ReactElement } from 'react';
 import { useAppSelector } from '../../hooks/redux';
+import { MainStyleBackground } from '../MainStyleBackground';
 import styles from './Loader.module.css';
 
-// ── SVG geometry ──────────────────────────────────────────────────────────────
-const RADIUS      = 46;                          // circle radius
-const STROKE      = 6;                           // stroke width
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;      // ~289px full circle
+/** Progress ring in viewBox space (427×427 — scales with cluster 292 / 427). */
+const VB = 427;
+const CX = VB / 2;
+const CY = VB / 2;
+const R = 196;
+const CIRCUMFERENCE = 2 * Math.PI * R;
 
 interface LoaderProps {
   /**
    * Optional explicit progress (0–100).
-   * When omitted the component reads from Redux auth.isLoading and
-   * auto-animates 0 → 100 over 1.5 s so the user always sees motion.
+   * When omitted the component auto-animates 0 → 100 over 1.5 s (Redux visibility or route fallback).
    */
   progress?: number;
+  /** Suspense fallback: ignore Redux and always show the Main-style loading shell. */
+  forceRouteFallback?: boolean;
 }
 
-export const Loader = ({ progress }: LoaderProps): React.ReactElement | null => {
-  // ── Read loading flag from every relevant slice ────────────────────────────
-  const authLoading    = useAppSelector((s) => s.auth.isLoading);
-  const isRefreshing   = useAppSelector((s) => s.auth.isRefreshing);
+export const Loader = ({
+  progress,
+  forceRouteFallback = false,
+}: LoaderProps): ReactElement | null => {
+  const authLoading = useAppSelector((s) => s.auth.isLoading);
+  const isRefreshing = useAppSelector((s) => s.auth.isRefreshing);
   const noticesLoading = useAppSelector((s) => s.notices.isLoading);
-  const newsLoading    = useAppSelector((s) => s.news.isLoading);
+  const newsLoading = useAppSelector((s) => s.news.isLoading);
+  const friendsLoading = useAppSelector((s) => s.friends.isLoading);
 
-  const isVisible = authLoading || isRefreshing || noticesLoading || newsLoading;
+  const isVisible =
+    forceRouteFallback ||
+    authLoading ||
+    isRefreshing ||
+    noticesLoading ||
+    newsLoading ||
+    friendsLoading;
 
-  // ── Auto-animate counter when no real progress is supplied ────────────────
   const counterRef = useRef<HTMLSpanElement>(null);
-  const rafRef     = useRef<number>(0);
-  const startRef   = useRef<number>(0);
-  const DURATION   = 1_500; // ms
+  const progressRef = useRef<SVGCircleElement>(null);
+  const rafRef = useRef(0);
+  const startRef = useRef(0);
+  const DURATION = 1_500;
+
+  const rawId = useId();
+  const gradId = `loader-grad-${rawId.replace(/:/g, '')}`;
 
   useEffect(() => {
     if (!isVisible || progress !== undefined) return;
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (reduceMotion) {
+      if (counterRef.current) counterRef.current.textContent = '100%';
+      if (progressRef.current) progressRef.current.style.strokeDashoffset = '0';
+      return;
+    }
+
+    let lastLabelPct = -1;
     const animate = (ts: number) => {
       if (!startRef.current) startRef.current = ts;
       const elapsed = ts - startRef.current;
-      const pct     = Math.min(Math.round((elapsed / DURATION) * 100), 100);
+      const pct = Math.min(Math.round((elapsed / DURATION) * 100), 100);
+      const labelPct = pct >= 100 ? 100 : Math.floor(pct / 5) * 5;
+      if (labelPct !== lastLabelPct && counterRef.current) {
+        counterRef.current.textContent = `${labelPct}%`;
+        lastLabelPct = labelPct;
+      }
 
-      if (counterRef.current) counterRef.current.textContent = `${pct}%`;
-
-      // update SVG offset directly (avoids React re-renders in the hot path)
-      const circle = document.getElementById('loader-progress-circle') as SVGCircleElement | null;
+      const circle = progressRef.current;
       if (circle) {
         const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
         circle.style.strokeDashoffset = String(offset);
@@ -52,63 +80,77 @@ export const Loader = ({ progress }: LoaderProps): React.ReactElement | null => 
     };
 
     startRef.current = 0;
-    rafRef.current   = requestAnimationFrame(animate);
+    if (counterRef.current) counterRef.current.textContent = '0%';
+    if (progressRef.current)
+      progressRef.current.style.strokeDashoffset = String(CIRCUMFERENCE);
+    rafRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafRef.current);
   }, [isVisible, progress]);
 
   if (!isVisible) return null;
 
-  // ── When a real progress value is provided ────────────────────────────────
-  const pct    = progress !== undefined ? Math.max(0, Math.min(100, progress)) : 0;
-  const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+  const pct = progress !== undefined ? Math.max(0, Math.min(100, progress)) : 0;
+  const dashOffset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
 
   return (
     <div
-      className={styles.backdrop}
+      className={styles.shell}
       role="status"
-      aria-label={`Loading, ${progress !== undefined ? pct : 0}%`}
+      aria-busy="true"
+      aria-label={
+        progress !== undefined
+          ? `Loading, ${pct}%`
+          : 'Loading'
+      }
       aria-live="polite"
     >
-      <div className={styles.card}>
-        <svg
-          className={styles.svg}
-          viewBox="0 0 100 100"
-          width="120"
-          height="120"
-          aria-hidden="true"
-        >
-          {/* Track ring */}
-          <circle
-            className={styles.track}
-            cx="50"
-            cy="50"
-            r={RADIUS}
-            strokeWidth={STROKE}
-          />
-          {/* Progress ring */}
-          <circle
-            id="loader-progress-circle"
-            className={styles.progress}
-            cx="50"
-            cy="50"
-            r={RADIUS}
-            strokeWidth={STROKE}
-            strokeDasharray={CIRCUMFERENCE}
-            strokeDashoffset={progress !== undefined ? offset : CIRCUMFERENCE}
-            strokeLinecap="round"
-            transform="rotate(-90 50 50)"
-          />
-        </svg>
-
-        {/* Percentage label — positioned over the SVG centre */}
-        <span
-          ref={counterRef}
-          className={styles.counter}
-          aria-live="off"
-        >
-          {progress !== undefined ? `${pct}%` : '0%'}
-        </span>
-      </div>
+      <MainStyleBackground className={styles.loaderMainBg} heroFetchPriority="low">
+        <div className={styles.loaderCluster}>
+          <div className={styles.clusterInner}>
+            <svg
+              className={styles.svgRing}
+              viewBox={`0 0 ${VB} ${VB}`}
+              aria-hidden="true"
+            >
+              <defs>
+                <linearGradient
+                  id={gradId}
+                  gradientUnits="userSpaceOnUse"
+                  x1={CX - 180}
+                  y1={CY - 180}
+                  x2={CX + 180}
+                  y2={CY + 180}
+                >
+                  <stop offset="0%" stopColor="#ffffff" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#ffffff" stopOpacity={0} />
+                </linearGradient>
+              </defs>
+              {/* Figma weight 2; only the arc is drawn — invisible at 0%, grows with dash offset. */}
+              <circle
+                ref={progressRef}
+                className={styles.progress}
+                cx={CX}
+                cy={CY}
+                r={R}
+                stroke={`url(#${gradId})`}
+                strokeDasharray={CIRCUMFERENCE}
+                strokeDashoffset={
+                  progress !== undefined ? dashOffset : CIRCUMFERENCE
+                }
+                transform={`rotate(-90 ${CX} ${CY})`}
+              />
+            </svg>
+            <span ref={counterRef} className={styles.counter} aria-live="off">
+              {progress !== undefined ? `${pct}%` : '0%'}
+            </span>
+          </div>
+        </div>
+      </MainStyleBackground>
     </div>
   );
 };
+
+/** Full-bleed Main-style shell for React Suspense while lazy routes load. */
+export function RouteLoaderFallback(): ReactElement {
+  return <Loader forceRouteFallback />;
+}

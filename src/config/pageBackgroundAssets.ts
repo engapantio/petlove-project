@@ -1,7 +1,7 @@
 /**
  * Reference map for images in `/public/images`.
  * - Login / Registration: applied on each page’s scoped `.hero` in `*Page.module.css`.
- * - Main loader: `src/styles/pageHeroBackgrounds.css` (`.appRouteLoading--main`).
+ * - Main / route loading: `MainStyleBackground` + `RouteLoaderFallback` (same art as Main).
  * - Home: scoped `.hero` in `HomePage.module.css`.
  * Add Pet / 404: wire only when those screens are implemented beyond placeholders.
  */

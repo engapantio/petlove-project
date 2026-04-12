@@ -4,11 +4,11 @@
   padding-block: var(--section-gap);
 }
 
-/* Same rail as NoticesPage `.titleWrap` */
+/* Same rail as NoticesPage `.titleWrap` / NoticesList `.section` */
 .titleWrap {
   width: 100%;
   padding-inline: var(--container-padding-x);
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 @media (min-width: 375px) {
@@ -16,7 +16,7 @@
     max-width: 335px;
     margin-inline: auto;
     padding-inline: 0;
-    margin-bottom: 32px;
+    margin-bottom: 40px;
   }
 }
 
@@ -34,19 +34,13 @@
     max-width: 1216px;
     margin-inline: auto;
     padding-inline: 0;
-    margin-bottom: 44px;
+    margin-bottom: 60px;
   }
-}
-
-.headerRow {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .title {
   margin: 0;
-  font-family: Manrope, sans-serif;
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: 28px;
   line-height: 28px;
@@ -54,52 +48,25 @@
   color: #262626;
 }
 
-.search {
-  width: 100%;
-  max-width: 335px;
-}
-
-.search :global(form) {
-  width: 100%;
-}
-
-.search :global(input) {
-  width: 100%;
-  height: 42px;
-  box-sizing: border-box;
-}
-
 @media (min-width: 768px) {
-  .headerRow {
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
-  }
-
   .title {
     font-size: 54px;
     line-height: 54px;
     letter-spacing: -1.62px;
   }
-
-  .search {
-    width: 230px;
-    max-width: none;
-  }
-
-  .search :global(input) {
-    height: 48px;
-  }
 }
 
-/* Same rail as NoticesList `.section` */
-.contentWrap {
+/* Band alignment — same pattern as NoticesPage `.empty` */
+.errorWrap,
+.emptyWrap {
   width: 100%;
   padding-inline: var(--container-padding-x);
+  margin-bottom: 24px;
 }
 
 @media (min-width: 375px) {
-  .contentWrap {
+  .errorWrap,
+  .emptyWrap {
     max-width: 335px;
     margin-inline: auto;
     padding-inline: 0;
@@ -107,19 +74,41 @@
 }
 
 @media (min-width: 768px) and (max-width: 1279px) {
-  .contentWrap {
+  .errorWrap,
+  .emptyWrap {
     max-width: 704px;
   }
 }
 
 @media (min-width: 1280px) {
-  .contentWrap {
+  .errorWrap,
+  .emptyWrap {
     max-width: 1216px;
   }
 }
 
-.pagination {
-  margin-top: 40px;
-  display: flex;
-  justify-content: center;
+.emptyWrap {
+  margin-bottom: 0;
+}
+
+.error {
+  margin: 0;
+  padding: 16px 20px;
+  border-radius: 15px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  color: var(--color-danger);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.empty {
+  margin: 0;
+  padding: 40px 20px;
+  text-align: center;
+  border-radius: 15px;
+  background: #ffffff;
+  color: rgb(38 38 38 / 0.8);
+  font-size: 16px;
+  line-height: 1.65;
 }

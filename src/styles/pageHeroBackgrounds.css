@@ -19,27 +19,34 @@
   background-position: center;
 }
 
+/* Matches Main page Figma: full-bleed art + 30% black scrim (55713:2582 / 55801:136 / 55812:312) */
 .appRouteLoading--main {
-  background-image: image-set(
-    url('/images/Mobile-Main-image.webp') 1x,
-    url('/images/Mobile-Main-image@2x.webp') 2x
-  );
+  background-image: linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+    image-set(
+      url('/images/Mobile-Main-image.webp') 1x,
+      url('/images/Mobile-Main-image@2x.webp') 2x
+    );
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
 }
 
 @media (min-width: 768px) and (max-width: 1279px) {
   .appRouteLoading--main {
-    background-image: image-set(
-      url('/images/Tablet-Main-image.webp') 1x,
-      url('/images/Tablet-Main-image@2x.webp') 2x
-    );
+    background-image: linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+      image-set(
+        url('/images/Tablet-Main-image.webp') 1x,
+        url('/images/Tablet-Main-image@2x.webp') 2x
+      );
   }
 }
 
 @media (min-width: 1280px) {
   .appRouteLoading--main {
-    background-image: image-set(
-      url('/images/Desktop-Main-image.webp') 1x,
-      url('/images/Desktop-Main-image@2x.webp') 2x
-    );
+    background-image: linear-gradient(rgb(0 0 0 / 0.3), rgb(0 0 0 / 0.3)),
+      image-set(
+        url('/images/Desktop-Main-image.webp') 1x,
+        url('/images/Desktop-Main-image@2x.webp') 2x
+      );
   }
 }

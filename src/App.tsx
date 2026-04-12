@@ -8,9 +8,11 @@ import { refreshUser } from './store/slices/authSlice';
 import PrivateRoute from './routes/PrivateRoute';
 import RestrictedRoute from './routes/RestrictedRoute';
 import Layout from './components/layout/Layout';
+import { RouteLoaderFallback } from './components/Loader';
 
 // ── Lazy-loaded pages ─────────────────────────────────────────────────────────
 const HomePage     = lazy(() => import('./pages/HomePage'));
+const MainPage     = lazy(() => import('./pages/MainPage'));
 const NewsPage     = lazy(() => import('./pages/NewsPage/NewsPage'));
 const NoticesPage  = lazy(() => import('./pages/NoticesPage'));
 const FriendsPage  = lazy(() => import('./pages/FriendsPage'));
@@ -33,17 +35,12 @@ const App = () => {
 
   return (
     <>
-      <Suspense
-        fallback={
-          <div className="appRouteLoading appRouteLoading--main" aria-busy="true" role="status">
-            Loading…
-          </div>
-        }
-      >
+      <Suspense fallback={<RouteLoaderFallback />}>
         <Routes>
           <Route path="/" element={<Layout />}>
             {/* Public */}
             <Route index element={<Navigate to="/home" replace />} />
+            <Route path="main"    element={<MainPage />} />
             <Route path="home"    element={<HomePage />} />
             <Route path="news"    element={<NewsPage />} />
             <Route path="notices" element={<NoticesPage />} />
@@ -69,6 +66,7 @@ const App = () => {
               element={<PrivateRoute component={<AddPetPage />} />}
             />
 
+            <Route path="404" element={<NotFoundPage />} />
             {/* Catch-all */}
             <Route path="*" element={<NotFoundPage />} />
           </Route>

@@ -5,7 +5,6 @@ import { SearchField } from '../../components/SearchField/SearchField';
 import { Title } from '../../components/Title/Title';
 import { NewsGrid } from '../../components/NewsGrid';
 import type { NewsCardProps } from '../../components/NewsCard';
-import { Loader } from '../../components/Loader';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchNews } from '../../store/slices/newsSlice';
 import type { NewsItem } from '../../types';
@@ -67,9 +66,8 @@ export const NewsPage = (): React.ReactElement => {
   const cardItems = useMemo(() => newsItems.map(toCardItem), [newsItems]);
 
   return (
-    <main className={css.page}>
-      <Loader />
-      <div className={css.container}>
+    <div className={css.page}>
+      <div className={css.titleWrap}>
         <div className={css.headerRow}>
           <Title text="News" className={css.title} />
           <div className={css.search}>
@@ -83,7 +81,6 @@ export const NewsPage = (): React.ReactElement => {
                 if (nextKeyword) next.set('keyword', nextKeyword);
                 else next.delete('keyword');
 
-                // Reset page on a new search; omit page=1 for clean URLs.
                 next.delete('page');
 
                 setSearchParams(next, { replace: true });
@@ -93,7 +90,9 @@ export const NewsPage = (): React.ReactElement => {
             />
           </div>
         </div>
+      </div>
 
+      <div className={css.contentWrap}>
         {error && (
           <section role="alert" aria-live="polite">
             <p>{error}</p>
@@ -115,20 +114,22 @@ export const NewsPage = (): React.ReactElement => {
 
         {!error && cardItems.length > 0 && <NewsGrid items={cardItems} />}
 
-        <div className={css.pagination}>
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={(page) => {
-              const next = new URLSearchParams(searchParams);
-              if (page <= 1) next.delete('page');
-              else next.set('page', String(page));
-              setSearchParams(next, { replace: true });
-            }}
-          />
-        </div>
+        {!isLoading && (
+          <div className={css.pagination}>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={(page) => {
+                const next = new URLSearchParams(searchParams);
+                if (page <= 1) next.delete('page');
+                else next.set('page', String(page));
+                setSearchParams(next, { replace: true });
+              }}
+            />
+          </div>
+        )}
       </div>
-    </main>
+    </div>
   );
 };
 
