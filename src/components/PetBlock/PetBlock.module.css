@@ -1,9 +1,9 @@
 .block {
-  display: none;
   border-radius: var(--radius-auth-card);
   overflow: hidden;
   flex-shrink: 0;
-  align-self: stretch;
+  width: 100%;
+  background: var(--color-primary);
 }
 
 .image {
@@ -12,12 +12,4 @@
   object-fit: cover;
   object-position: center;
   display: block;
-}
-
-@media (min-width: 1280px) {
-  .block {
-    display: block;
-    width: 592px;
-    height: 648px;
-  }
 }

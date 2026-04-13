@@ -15,6 +15,7 @@ export interface AuthState {
   token: string | null;
   isLoggedIn: boolean;
   isRefreshing: boolean;
+  isAuthInitialized: boolean;
   isLoading: boolean;
   error: string | null;
 }
@@ -181,10 +182,20 @@ export interface FriendsState {
 export interface MyPet {
   _id: string;
   name: string;
+  title: string;
   birthday: string;
   sex: string;
   species: string;
   imgURL?: string;
+}
+
+export interface AddPetPayload {
+  title: string;
+  name: string;
+  imgURL: string;
+  species: string;
+  birthday: string;
+  sex: string;
 }
 
 export interface ProfileState {

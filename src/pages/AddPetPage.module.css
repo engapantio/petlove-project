@@ -1,0 +1,81 @@
+.shell {
+  width: 100%;
+  padding: 8px var(--container-padding-x) var(--space-6);
+}
+
+.grid {
+  max-width: 335px;
+  margin: 0 auto;
+  display: grid;
+  gap: 10px;
+}
+
+.hero {
+  height: 213px;
+}
+
+.heroBlock {
+  height: 100%;
+  border-radius: 30px;
+}
+
+.heroBlock :global(img) {
+  object-fit: cover;
+  object-position: right center;
+}
+
+.panel {
+  border-radius: 30px;
+  background: #fff;
+  padding: 28px 20px 20px;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding: 11px 32px var(--space-8);
+  }
+
+  .grid {
+    max-width: 704px;
+    gap: 16px;
+  }
+
+  .hero {
+    height: 248px;
+  }
+
+  .heroBlock {
+    border-radius: 60px;
+  }
+
+  .panel {
+    border-radius: 60px;
+    padding: 40px 32px 37px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .shell {
+    padding: 8px 32px var(--space-8);
+  }
+
+  .grid {
+    max-width: 1216px;
+    grid-template-columns: 592px 592px;
+    gap: 32px;
+    align-items: stretch;
+  }
+
+  .hero {
+    height: 654px;
+  }
+
+  .heroBlock {
+    border-radius: 60px;
+  }
+
+  .panel {
+    border-radius: 60px;
+    padding: 60px 80px;
+  }
+}

@@ -15,7 +15,8 @@ import styles from './Icon.module.css';
  *
  * Icon names available: heart, heart-filled, search, close, eye, eye-off,
  *   trash, arrow-left, arrow-right, arrow-first, arrow-last, edit, logout, plus,
- *   check, cross-small, phone, mail, link-external
+ *   check, cross-small, phone, mail, link-external, paw, calendar, chevron-down,
+ *   upload-cloud, female, male, multiple
  */
 
 // ── Allowed icon names (keep in sync with sprite.svg) ────────────────────────
@@ -38,7 +39,14 @@ export type IconName =
   | 'cross-small'
   | 'phone'
   | 'mail'
-  | 'link-external';
+  | 'link-external'
+  | 'paw'
+  | 'calendar'
+  | 'chevron-down'
+  | 'upload-cloud'
+  | 'female'
+  | 'male'
+  | 'multiple';
 
 interface IconProps {
   id:          IconName;

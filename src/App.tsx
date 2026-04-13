@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useAppDispatch } from './hooks/redux';
+import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { refreshUser } from './store/slices/authSlice';
 import PrivateRoute from './routes/PrivateRoute';
 import RestrictedRoute from './routes/RestrictedRoute';
@@ -25,6 +25,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 // ── App ───────────────────────────────────────────────────────────────────────
 const App = () => {
   const dispatch = useAppDispatch();
+  const isAuthInitialized = useAppSelector((state) => state.auth.isAuthInitialized);
 
   /** On every cold start, try to restore the session using the
    *  stored token. authSlice reads token from Redux (persisted
@@ -32,6 +33,10 @@ const App = () => {
   useEffect(() => {
     dispatch(refreshUser());
   }, [dispatch]);
+
+  if (!isAuthInitialized) {
+    return <RouteLoaderFallback />;
+  }
 
   return (
     <>
