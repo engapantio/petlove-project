@@ -4,6 +4,7 @@ import noticesReducer from './slices/noticesSlice';
 import newsReducer from './slices/newsSlice';
 import friendsReducer from './slices/friendsSlice';
 import profileReducer from './slices/profileSlice';
+import viewedNoticesReducer from './slices/viewedNoticesSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     news: newsReducer,
     friends: friendsReducer,
     profile: profileReducer,
+    viewedNotices: viewedNoticesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

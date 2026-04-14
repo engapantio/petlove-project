@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 import { logout } from '../../store/slices/authSlice';
 import { Icon } from '../Icon/Icon';
+import { LogoutConfirmModal } from '../LogoutConfirmModal';
 import { NavMenu, MENU_ID } from './NavMenu';
 import styles from './Header.module.css';
 
@@ -18,9 +19,10 @@ const Header = ({ surface = 'default' }: HeaderProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, user } = useAppSelector((s) => s.auth);
+  const { isLoggedIn, user, isLoading } = useAppSelector((s) => s.auth);
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuOpenPath, setMenuOpenPath] = useState<string | null>(null);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   const isDesktop = useMediaQuery('(min-width: 1280px)');
   const isHomePage = location.pathname === '/home' || location.pathname === '/';
@@ -52,14 +54,14 @@ const Header = ({ surface = 'default' }: HeaderProps) => {
     return () => cancelAnimationFrame(raf);
   }, [location.pathname, menuOpen]);
 
-  const handleLogout = async () => {
-    await dispatch(logout());
-    navigate('/home');
-  };
-
-  const handleMenuLogout = async () => {
+  const requestLogout = () => {
     setMenuOpenPath(null);
     setMenuOpen(false);
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = async () => {
+    setIsLogoutModalOpen(false);
     await dispatch(logout());
     navigate('/home');
   };
@@ -74,8 +76,6 @@ const Header = ({ surface = 'default' }: HeaderProps) => {
     ]
       .filter(Boolean)
       .join(' ');
-
-  const userInitial = user?.name?.charAt(0)?.toUpperCase() ?? '?';
 
   return (
     <header
@@ -128,7 +128,18 @@ const Header = ({ surface = 'default' }: HeaderProps) => {
                 aria-label={`Profile: ${user?.name ?? 'My profile'}`}
               >
                 <span className={styles.avatarCircle} aria-hidden="true">
-                  {userInitial}
+                  {user?.avatar ? (
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      className={styles.avatarImage}
+                      width={50}
+                      height={50}
+                      loading="lazy"
+                    />
+                  ) : (
+                    <Icon id="user-02" width={20} height={20} className={styles.avatarIcon} />
+                  )}
                 </span>
                 <span className={styles.avatarName}>{user?.name}</span>
               </NavLink>
@@ -137,7 +148,7 @@ const Header = ({ surface = 'default' }: HeaderProps) => {
                 className={[styles.logoutBtnHeader, onPrimary && styles.logoutBtnHeaderOnPrimary]
                   .filter(Boolean)
                   .join(' ')}
-                onClick={() => void handleLogout()}
+                onClick={requestLogout}
               >
                 LOG OUT
               </button>
@@ -187,10 +198,16 @@ const Header = ({ surface = 'default' }: HeaderProps) => {
             setMenuOpen(false);
           }}
           isLoggedIn={isLoggedIn}
-          onLogout={() => void handleMenuLogout()}
+          onLogout={requestLogout}
           variant={isHomePage ? 'home' : 'internal'}
         />
       )}
+      <LogoutConfirmModal
+        isOpen={isLogoutModalOpen}
+        isLoading={isLoading}
+        onConfirm={() => void confirmLogout()}
+        onClose={() => setIsLogoutModalOpen(false)}
+      />
     </header>
   );
 };

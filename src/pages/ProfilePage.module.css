@@ -1,0 +1,865 @@
+.shell {
+  width: 100%;
+  padding: 8px var(--container-padding-x) var(--space-6);
+}
+
+.layout {
+  max-width: 335px;
+  margin: 0 auto;
+  display: grid;
+  gap: 40px;
+}
+
+.profileCard {
+  width: 100%;
+  border-radius: 30px;
+  background: #fff;
+  padding: 18px 20px 40px;
+}
+
+.profileTop {
+  display: grid;
+  row-gap: 18px;
+}
+
+.profileTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.userChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 80px;
+  flex: 0 0 auto;
+  height: 38px;
+  padding: 10px 12px;
+  border-radius: 30px;
+  background: #f6b83d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.28px;
+  line-height: 18px;
+}
+
+.userChipIcon {
+  color: currentColor;
+}
+
+.editButton {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 30px;
+  background: #fff4df;
+  color: #f6b83d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.editButton:hover:not(:disabled) {
+  background: #f6b83d;
+  color: #fff;
+}
+
+.editButton:focus-visible {
+  outline: 2px solid #f6b83d;
+  outline-offset: 2px;
+}
+
+.avatarBlock {
+  width: 100%;
+  display: grid;
+  justify-items: center;
+  row-gap: 8px;
+}
+
+.avatarVisual {
+  display: inline-flex;
+}
+
+.avatarImage,
+.avatarFallback {
+  width: 94px;
+  height: 94px;
+  border-radius: 100px;
+}
+
+.avatarImage {
+  object-fit: cover;
+}
+
+.avatarFallback {
+  background: #fff4df;
+  color: #f6b83d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarFallbackIcon {
+  width: 40px;
+  height: 40px;
+}
+
+.avatarUploadButton {
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.avatarUploadText {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: -0.24px;
+  color: #262626;
+  text-decoration: underline;
+}
+
+.infoBlock {
+  margin-top: 28px;
+}
+
+.blockTitle {
+  margin: 0;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  color: #2b2b2a;
+}
+
+.infoFields {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.infoField {
+  margin: 0;
+  height: 42px;
+  border-radius: 30px;
+  border: 1px solid rgb(38 38 38 / 0.15);
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.42px;
+  color: #262626;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.infoFieldFilled {
+  border-color: #f6b83d;
+}
+
+.myPetsBlock {
+  margin-top: 40px;
+}
+
+.myPetsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.addPetLink {
+  height: 38px;
+  min-width: 103px;
+  padding: 10px 16px;
+  border-radius: 30px;
+  background: #f6b83d;
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.42px;
+}
+
+.addPetLink:hover {
+  background: #f9b020;
+}
+
+.addPetLink:focus-visible {
+  outline: 2px solid #f6b83d;
+  outline-offset: 2px;
+}
+
+.loadingText {
+  margin: 12px 0 0;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+  color: rgb(38 38 38 / 0.7);
+}
+
+.petCards {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+}
+
+.myPetsEmptySpacer {
+  height: 40px;
+}
+
+.petCard {
+  position: relative;
+  height: 132px;
+  border-radius: 20px;
+  border: 1px solid rgb(38 38 38 / 0.1);
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 66px minmax(0, 1fr);
+  column-gap: 14px;
+}
+
+.petImageWrap {
+  width: 66px;
+  height: 66px;
+}
+
+.petImage,
+.petImageFallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 100px;
+}
+
+.petImage {
+  object-fit: cover;
+}
+
+.petImageFallback {
+  background: #fff4df;
+  color: #f6b83d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.petInfo {
+  min-width: 0;
+}
+
+.petTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.petTitle {
+  margin: 0;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+  color: #2b2b2a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.petMeta {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.petMeta li {
+  min-width: 0;
+}
+
+.petMeta span {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: -0.2px;
+  color: rgb(38 38 38 / 0.5);
+}
+
+.petMeta strong {
+  display: block;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: -0.24px;
+  font-weight: 500;
+  color: #262626;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.petDeleteStub {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 30px;
+  background: #fff4df;
+  color: #f6b83d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.petDeleteStub:hover:not(:disabled) {
+  background: #f6b83d;
+  color: #fff;
+}
+
+.petDeleteStub:focus-visible {
+  outline: 2px solid #f6b83d;
+  outline-offset: 2px;
+}
+
+.logoutButton {
+  margin-top: 18px;
+  width: 114px;
+  height: 42px;
+  border: none;
+  border-radius: 30px;
+  background: #fff4df;
+  color: #f6b83d;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.42px;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.logoutButton:hover:not(:disabled) {
+  background: #f6b83d;
+  color: #fff;
+}
+
+.logoutButton:focus-visible {
+  outline: 2px solid #f6b83d;
+  outline-offset: 2px;
+}
+
+.favoritesSection {
+  display: grid;
+  justify-items: center;
+}
+
+.favoritesTabs {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 123px 123px;
+  justify-content: center;
+  gap: 10px;
+}
+
+.favoritesTab {
+  height: 42px;
+  border-radius: 30px;
+  border: none;
+  background: #fff;
+  color: #262626;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.42px;
+  cursor: pointer;
+}
+
+.favoritesTab:hover:not(.favoritesTabActive) {
+  background: #fff4df;
+}
+
+.favoritesTabActive {
+  background: #f6b83d;
+  color: #fff;
+}
+
+.favoritesEmptyText {
+  margin: 80px 0 0;
+  max-width: 335px;
+  text-align: center;
+  color: #262626;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+  font-weight: 500;
+}
+
+.favoritesEmptyHighlight {
+  color: #f6b83d;
+}
+
+.favoritesCards {
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 20px;
+  width: 100%;
+}
+
+.favoriteCard {
+  width: 335px;
+  border-radius: 16px;
+  background: #fff;
+  padding: 24px 24px 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.favoriteImageWrap {
+  width: 287px;
+  height: 178px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.favoriteImage,
+.favoriteImageFallback {
+  width: 100%;
+  height: 100%;
+}
+
+.favoriteImage {
+  object-fit: cover;
+}
+
+.favoriteImageFallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff4df;
+  color: #f6b83d;
+}
+
+.favoriteCardBody {
+  margin-top: 24px;
+  position: relative;
+}
+
+.favoriteTitle {
+  margin: 0;
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  color: #2b2b2a;
+}
+
+.favoriteRating {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #2b2b2a;
+}
+
+.favoriteStar {
+  color: #ffc531;
+}
+
+.favoriteMeta {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.favoriteMeta li {
+  min-width: 0;
+}
+
+.favoriteMeta span {
+  display: block;
+  margin-bottom: 2px;
+  font-size: 10px;
+  line-height: 14px;
+  letter-spacing: -0.2px;
+  color: rgb(38 38 38 / 0.5);
+}
+
+.favoriteMeta strong {
+  display: block;
+  font-size: 12px;
+  line-height: 14px;
+  letter-spacing: -0.24px;
+  font-weight: 500;
+  color: #262626;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.favoriteDescription {
+  margin: 16px 0 0;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.28px;
+  color: #2b2b2a;
+}
+
+.favoriteActions {
+  margin-top: auto;
+  padding-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.favoriteActionsWithDelete {
+  grid-template-columns: 1fr 44px;
+  align-items: center;
+}
+
+.favoritePrice {
+  margin: 0;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 700;
+  color: #2b2b2a;
+}
+
+.favoriteActionsWithDelete .favoritePrice {
+  grid-column: 1 / 3;
+}
+
+.favoriteLearnButton {
+  height: 46px;
+  border: none;
+  border-radius: 30px;
+  background: #f6b83d;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+  letter-spacing: -0.42px;
+  cursor: pointer;
+}
+
+.favoriteLearnButton:hover {
+  background: #f9b020;
+}
+
+.favoriteLearnButton:focus-visible {
+  outline: 2px solid #f6b83d;
+  outline-offset: 2px;
+}
+
+.favoriteDeleteStub {
+  width: 44px;
+  height: 44px;
+  border-radius: 30px;
+  background: #fff4df;
+  color: #f6b83d;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.favoriteDeleteStub:hover {
+  background: #f6b83d;
+  color: #fff;
+}
+
+.favoriteDeleteStub:focus-visible {
+  outline: 2px solid #f6b83d;
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .shell {
+    padding: 11px 32px var(--space-8);
+  }
+
+  .layout {
+    max-width: 704px;
+    gap: 72px;
+  }
+
+  .profileCard {
+    border-radius: 60px;
+    padding: 40px;
+  }
+
+  .profileTop {
+    row-gap: 16px;
+  }
+
+  .avatarImage,
+  .avatarFallback {
+    width: 110px;
+    height: 110px;
+  }
+
+  .avatarUploadText {
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.28px;
+  }
+
+  .avatarFallbackIcon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .infoBlock {
+    margin-top: 20px;
+  }
+
+  .blockTitle {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .infoFields {
+    margin-top: 20px;
+    gap: 14px;
+    grid-template-columns: 305px 305px;
+  }
+
+  .infoField {
+    height: 52px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+    padding: 16px;
+  }
+
+  .infoFields .infoField:last-child {
+    grid-column: 1 / 2;
+  }
+
+  .myPetsBlock {
+    margin-top: 40px;
+  }
+
+  .addPetLink {
+    min-width: 118px;
+    height: 40px;
+    padding: 10px 20px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+  }
+
+  .petCards {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 305px 305px;
+    gap: 14px;
+  }
+
+  .myPetsEmptySpacer {
+    height: 80px;
+  }
+
+  .petCard {
+    height: 149px;
+    grid-template-columns: 75px minmax(0, 1fr);
+  }
+
+  .petImageWrap {
+    width: 75px;
+    height: 75px;
+  }
+
+  .petDeleteStub {
+    width: 32px;
+    height: 32px;
+  }
+
+  .logoutButton {
+    width: 136px;
+    height: 50px;
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+  }
+
+  .favoritesTabs {
+    grid-template-columns: 142px 142px;
+    gap: 8px;
+    justify-content: start;
+  }
+
+  .favoritesTab {
+    height: 48px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+  }
+
+  .favoritesEmptyText {
+    margin-top: 135px;
+    max-width: 458px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.32px;
+  }
+
+  .favoritesCards {
+    margin-top: 38px;
+    grid-template-columns: 342px 342px;
+    gap: 20px;
+  }
+
+  .favoriteCard {
+    width: 342px;
+    min-height: 422px;
+    padding: 14px;
+  }
+
+  .favoriteImageWrap {
+    width: 314px;
+    height: 162px;
+  }
+
+  .favoriteCardBody {
+    margin-top: 14px;
+  }
+
+  .favoriteTitle {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .favoriteDescription {
+    margin-top: 14px;
+  }
+
+  .favoriteActions {
+    margin-top: auto;
+    padding-top: 14px;
+  }
+
+  .favoriteActionsWithDelete {
+    grid-template-columns: 1fr 44px;
+    align-items: center;
+  }
+
+  .favoriteActionsWithDelete .favoritePrice {
+    grid-column: 1 / 3;
+  }
+
+  .favoriteLearnButton {
+    height: 44px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .shell {
+    padding: 8px 32px var(--space-8);
+  }
+
+  .layout {
+    max-width: 1216px;
+    grid-template-columns: 520px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .profileCard {
+    width: 520px;
+    min-height: 674px;
+  }
+
+  .infoFields {
+    grid-template-columns: 440px;
+    gap: 14px;
+  }
+
+  .myPetsHeader {
+    width: 440px;
+  }
+
+  .petCards {
+    grid-template-columns: 440px;
+  }
+
+  .petCard {
+    height: 130px;
+    grid-template-columns: 90px minmax(0, 1fr);
+    padding: 20px;
+  }
+
+  .petImageWrap {
+    width: 90px;
+    height: 90px;
+  }
+
+  .petInfo {
+    padding-left: 25px;
+  }
+
+  .petDeleteStub {
+    width: 38px;
+    height: 38px;
+  }
+
+  .favoritesSection {
+    justify-items: start;
+    padding-top: 40px;
+  }
+
+  .favoritesTabs {
+    width: auto;
+    justify-content: start;
+    grid-template-columns: 142px 142px;
+    gap: 8px;
+  }
+
+  .favoritesEmptyText {
+    margin-top: 180px;
+    max-width: 458px;
+    text-align: center;
+  }
+
+  .favoritesCards {
+    margin-top: 32px;
+    grid-template-columns: repeat(2, 320px);
+    gap: 24px;
+  }
+
+  .favoriteCard {
+    width: 320px;
+    min-height: 422px;
+    padding: 14px;
+  }
+
+  .favoriteImageWrap {
+    width: 292px;
+    height: 162px;
+  }
+}

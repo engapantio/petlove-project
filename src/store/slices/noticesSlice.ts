@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/toolkit';
 import { instance } from '../../api/axiosInstance';
-import { refreshUser } from './authSlice';
+import { logout, refreshUser } from './authSlice';
 import type { NoticesState, NoticesFilters, NoticesFilterOptions, PaginatedResponse, Pet } from '../../types';
 
 const initialFilterOptions: NoticesFilterOptions = {
@@ -10,7 +10,9 @@ const initialFilterOptions: NoticesFilterOptions = {
 };
 
 const initialState: NoticesState = {
-  items: [], favoriteIds: [], owned: [],
+  items: [], favoriteIds: [],
+  favoriteItems: [],
+  favoriteRollbackCache: {},
   totalPages: 1, currentPage: 1,
   isLoading: false, error: null,
   filters: { search: '', category: '', gender: '', type: '', location: '', page: 1 },
@@ -92,6 +94,18 @@ export const toggleFavorite = createAsyncThunk(
   },
 );
 
+export const fetchFavoriteNotices = createAsyncThunk(
+  'notices/fetchFavorites',
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await instance.get<Pet[]>('/users/notices/favorites');
+      return data;
+    } catch (err: unknown) {
+      return rejectWithValue((err as Error).message);
+    }
+  },
+);
+
 // ── Slice ─────────────────────────────────────────────────────────────────────
 
 const noticesSlice = createSlice({
@@ -100,6 +114,7 @@ const noticesSlice = createSlice({
   reducers: {
     setFilters(s, a: PayloadAction<Partial<NoticesFilters>>) { s.filters = { ...s.filters, ...a.payload }; },
     resetFilters(s) { s.filters = initialState.filters; },
+    clearNoticesError(s) { s.error = null; },
   },
   extraReducers: (builder) => {
     builder
@@ -117,21 +132,45 @@ const noticesSlice = createSlice({
     // Seed favoriteIds from GET /users/current (already called by refreshUser on app start)
     builder.addCase(refreshUser.fulfilled, (s, a) => {
       s.favoriteIds = (a.payload.noticesFavorites ?? []).map((n) => n._id);
+      s.favoriteItems = s.favoriteItems.filter((notice) => s.favoriteIds.includes(notice._id));
+      s.favoriteRollbackCache = {};
     });
+
+    builder.addCase(logout.fulfilled, (s) => {
+      s.favoriteIds = [];
+      s.favoriteItems = [];
+      s.favoriteRollbackCache = {};
+    });
+
+    builder
+      .addCase(fetchFavoriteNotices.fulfilled, (s, a) => {
+        s.favoriteItems = a.payload;
+        s.favoriteIds = a.payload.map((notice) => notice._id);
+        s.favoriteRollbackCache = {};
+      });
 
     builder
       // Optimistic: flip the heart immediately without waiting for the network
       .addCase(toggleFavorite.pending, (s, a) => {
         const { id, isFavorite } = a.meta.arg;
         if (isFavorite) {
+          const favoriteToRollback = s.favoriteItems.find((notice) => notice._id === id);
+          if (favoriteToRollback) s.favoriteRollbackCache[id] = favoriteToRollback;
           s.favoriteIds = s.favoriteIds.filter((fid) => fid !== id);
+          s.favoriteItems = s.favoriteItems.filter((notice) => notice._id !== id);
         } else if (!s.favoriteIds.includes(id)) {
           s.favoriteIds = [...s.favoriteIds, id];
+          const notice = s.items.find((item) => item._id === id);
+          if (notice && !s.favoriteItems.some((favorite) => favorite._id === id)) {
+            s.favoriteItems = [notice, ...s.favoriteItems];
+          }
         }
       })
       // Fulfilled: sync with the authoritative ID list returned by the API
       .addCase(toggleFavorite.fulfilled, (s, a) => {
         s.favoriteIds = a.payload.favoriteIds;
+        s.favoriteItems = s.favoriteItems.filter((notice) => s.favoriteIds.includes(notice._id));
+        delete s.favoriteRollbackCache[a.payload.id];
       })
       // Rejected: rollback the optimistic update and surface the error
       .addCase(toggleFavorite.rejected, (s, a) => {
@@ -139,14 +178,20 @@ const noticesSlice = createSlice({
         if (isFavorite) {
           // Tried to remove but failed → re-add
           if (!s.favoriteIds.includes(id)) s.favoriteIds = [...s.favoriteIds, id];
+          const rollbackNotice = s.favoriteRollbackCache[id] ?? s.items.find((notice) => notice._id === id);
+          if (rollbackNotice && !s.favoriteItems.some((favorite) => favorite._id === id)) {
+            s.favoriteItems = [rollbackNotice, ...s.favoriteItems];
+          }
         } else {
           // Tried to add but failed → remove
           s.favoriteIds = s.favoriteIds.filter((fid) => fid !== id);
+          s.favoriteItems = s.favoriteItems.filter((notice) => notice._id !== id);
         }
+        delete s.favoriteRollbackCache[id];
         s.error = a.payload as string;
       });
   },
 });
 
-export const { setFilters, resetFilters } = noticesSlice.actions;
+export const { setFilters, resetFilters, clearNoticesError } = noticesSlice.actions;
 export default noticesSlice.reducer;

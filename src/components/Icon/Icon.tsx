@@ -14,9 +14,9 @@ import styles from './Icon.module.css';
  *   <symbol id="icon-{name}" viewBox="0 0 24 24"> ... </symbol>
  *
  * Icon names available: heart, heart-filled, search, close, eye, eye-off,
- *   trash, arrow-left, arrow-right, arrow-first, arrow-last, edit, logout, plus,
+ *   trash-2, arrow-left, arrow-right, arrow-first, arrow-last, logout, plus,
  *   check, cross-small, phone, mail, link-external, paw, calendar, chevron-down,
- *   upload-cloud, female, male, multiple
+ *   upload-cloud, female, male, multiple, user-02, user-02-empty, edit-2
  */
 
 // ── Allowed icon names (keep in sync with sprite.svg) ────────────────────────
@@ -27,12 +27,11 @@ export type IconName =
   | 'close'
   | 'eye'
   | 'eye-off'
-  | 'trash'
+  | 'trash-2'
   | 'arrow-left'
   | 'arrow-right'
   | 'arrow-first'
   | 'arrow-last'
-  | 'edit'
   | 'logout'
   | 'plus'
   | 'check'
@@ -46,7 +45,10 @@ export type IconName =
   | 'upload-cloud'
   | 'female'
   | 'male'
-  | 'multiple';
+  | 'multiple'
+  | 'user-02'
+  | 'user-02-empty'
+  | 'edit-2';
 
 interface IconProps {
   id:          IconName;

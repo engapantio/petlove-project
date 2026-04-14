@@ -1,6 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { setAuthHeader, clearAuthHeader } from '../../api/axiosInstance';
-import { loginApi, registerApi, logoutApi, getCurrentUserApi } from '../../api/auth';
+import {
+  loginApi,
+  registerApi,
+  logoutApi,
+  getCurrentUserApi,
+  updateUserApi,
+} from '../../api/auth';
 import type { AuthState, LoginCredentials, RegisterCredentials } from '../../types';
 
 const AUTH_TOKEN_KEY = 'petloveToken';
@@ -89,6 +95,18 @@ export const refreshUser = createAsyncThunk(
   },
 );
 
+export const updateUserProfile = createAsyncThunk(
+  'auth/updateUserProfile',
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const { data } = await updateUserApi(formData);
+      return data;
+    } catch (err: unknown) {
+      return rejectWithValue((err as Error).message);
+    }
+  },
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -141,6 +159,31 @@ const authSlice = createSlice({
         s.isAuthInitialized = true;
         clearPersistedToken();
         clearAuthHeader();
+      });
+    builder
+      .addCase(updateUserProfile.pending, (s) => {
+        s.isLoading = true;
+        s.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (s, a) => {
+        s.isLoading = false;
+        if (!s.user) {
+          s.user = {
+            ...a.payload,
+            token: a.payload.token ?? s.token ?? '',
+          };
+          return;
+        }
+
+        s.user = {
+          ...s.user,
+          ...a.payload,
+          token: s.user.token,
+        };
+      })
+      .addCase(updateUserProfile.rejected, (s, a) => {
+        s.isLoading = false;
+        s.error = a.payload as string;
       });
   },
 });

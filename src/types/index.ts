@@ -86,13 +86,19 @@ export interface NoticesState {
   items: Pet[];
   /** IDs of the current user's favourite notices (string[] matches API response shape). */
   favoriteIds: string[];
-  owned: Pet[];
+  favoriteItems: Pet[];
+  favoriteRollbackCache: Record<string, Pet>;
   totalPages: number;
   currentPage: number;
   isLoading: boolean;
   error: string | null;
   filters: NoticesFilters;
   filterOptions: NoticesFilterOptions;
+}
+
+export interface ViewedNoticesState {
+  viewedByUser: Record<string, string[]>;
+  noticeCacheByUser: Record<string, Record<string, Pet>>;
 }
 
 export interface NoticesFilters {
@@ -202,4 +208,5 @@ export interface ProfileState {
   pets: MyPet[];
   isLoading: boolean;
   error: string | null;
+  hasLoaded: boolean;
 }

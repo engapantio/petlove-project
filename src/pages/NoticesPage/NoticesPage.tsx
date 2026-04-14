@@ -1,13 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import type { NoticesFilters } from '../../types';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import {
+  clearNoticesError,
   fetchNotices,
   fetchNoticesOptions,
   toggleFavorite,
 } from '../../store/slices/noticesSlice';
+import { markNoticeViewed } from '../../store/slices/viewedNoticesSlice';
 import { Title } from '../../components/Title';
 import { NoticesFilters as NoticesFiltersPanel, type NoticesSortKey } from '../../components/NoticesFilters';
 import { NoticesList } from '../../components/NoticesList';
@@ -93,12 +95,14 @@ const toOptions  = (arr: string[]) => arr.map((v) => ({ value: v, label: capital
 const NoticesPage = () => {
   const dispatch   = useAppDispatch();
   const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
+  const currentUser = useAppSelector((s) => s.auth.user);
   const { items, error, totalPages, currentPage, favoriteIds, filterOptions } =
     useAppSelector((s) => s.notices);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const [openNoticeId, setOpenNoticeId] = useState<string | null>(null);
   const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
+  const lastErrorToastRef = useRef<string | null>(null);
 
   /**
    * Derive filter state and page directly from the URL.
@@ -130,9 +134,18 @@ const NoticesPage = () => {
     void dispatch(fetchNotices(params));
   }, [dispatch, localFilters, page]);
 
+  useEffect(() => {
+    return () => {
+      dispatch(clearNoticesError());
+      lastErrorToastRef.current = null;
+    };
+  }, [dispatch]);
+
   // ── Surface API errors ────────────────────────────────────────────────────
   useEffect(() => {
-    if (error) toast.error(error);
+    if (!error || error === lastErrorToastRef.current) return;
+    lastErrorToastRef.current = error;
+    toast.error(error, { toastId: `notices-error-${error}` });
   }, [error]);
 
   // ── Handlers ──────────────────────────────────────────────────────────────
@@ -166,8 +179,13 @@ const NoticesPage = () => {
 
   const handleLearnMore = useCallback((id: string) => {
     if (!isLoggedIn) { setIsAuthPromptOpen(true); return; }
+    const userKey = currentUser?._id ?? currentUser?.email;
+    if (userKey) {
+      const selectedNotice = items.find((notice) => notice._id === id);
+      dispatch(markNoticeViewed({ userKey, noticeId: id, notice: selectedNotice }));
+    }
     setOpenNoticeId(id);
-  }, [isLoggedIn]);
+  }, [currentUser?._id, currentUser?.email, dispatch, isLoggedIn, items]);
 
   const handleCloseModal = useCallback(() => {
     setOpenNoticeId(null);

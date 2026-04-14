@@ -222,6 +222,17 @@
   user-select: none;
 }
 
+.avatarIcon {
+  color: var(--color-primary);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-full);
+}
+
 /* Name text hidden on mobile, shown at 768px+ */
 .avatarName {
   display: none;
