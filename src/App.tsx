@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -26,15 +26,28 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 const App = () => {
   const dispatch = useAppDispatch();
   const isAuthInitialized = useAppSelector((state) => state.auth.isAuthInitialized);
+  const isFavoritesInitialized = useAppSelector((state) => state.notices.isFavoritesInitialized);
+  const [isBootReady, setIsBootReady] = useState(false);
 
   /** On every cold start, try to restore the session using the
    *  stored token. authSlice reads token from Redux (persisted
    *  via redux-persist or equivalent) and calls GET /users/current. */
   useEffect(() => {
-    dispatch(refreshUser());
+    let isMounted = true;
+
+    const bootstrap = async (): Promise<void> => {
+      await dispatch(refreshUser());
+      if (isMounted) setIsBootReady(true);
+    };
+
+    void bootstrap();
+
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch]);
 
-  if (!isAuthInitialized) {
+  if (!isAuthInitialized || !isBootReady || !isFavoritesInitialized) {
     return <RouteLoaderFallback />;
   }
 

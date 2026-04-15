@@ -1,24 +1,138 @@
 .panel {
-  width: 100%;
-  max-width: 470px;
+  width: 335px;
+  max-width: 335px;
+  height: 473px;
   border-radius: 30px;
+  border: none;
+  box-shadow: none;
+}
+
+.header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  padding: 0;
+}
+
+.closeButton {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  color: #262626;
+}
+
+.closeButton:hover {
+  background: transparent;
+  color: #262626;
+}
+
+.body {
+  height: 100%;
+  padding: 40px 20px;
 }
 
 .content {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
-.field {
+.infoGroup {
   display: grid;
-  gap: 6px;
+  gap: 20px;
 }
 
-.label {
+.title {
+  margin: 0;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0;
+  font-weight: 700;
+  color: #2b2b2a;
+}
+
+.avatarGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.avatarCircle {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  border-radius: 100px;
+  background: #fff4df;
+  color: #f6b83d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarFallbackIcon {
+  color: currentColor;
+}
+
+.uploadRow {
+  display: grid;
+  grid-template-columns: 161px 126px;
+  gap: 8px;
+}
+
+.avatarSource {
+  height: 42px;
+  border-radius: 30px;
+  border: 1px solid rgb(38 38 38 / 0.15);
+  padding: 13px 12px;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 16px;
   letter-spacing: -0.24px;
+  font-weight: 500;
   color: rgb(38 38 38 / 0.6);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uploadButton {
+  height: 42px;
+  border: none;
+  border-radius: 30px;
+  padding: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background: #fff4df;
+  color: #262626;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.uploadText {
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: -0.24px;
+  font-weight: 500;
+}
+
+.uploadIcon {
+  width: 16px;
+  height: 16px;
+  color: #f6b83d;
+}
+
+.fields {
+  display: grid;
+  gap: 10px;
 }
 
 .input {
@@ -26,24 +140,43 @@
   height: 42px;
   border-radius: 30px;
   border: 1px solid rgb(38 38 38 / 0.15);
-  padding: 0 14px;
+  padding: 12px;
   font-size: 14px;
   line-height: 18px;
-  letter-spacing: -0.28px;
+  letter-spacing: -0.42px;
+  font-weight: 500;
   color: #262626;
 }
 
-.actions {
-  margin-top: 6px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+.input::placeholder {
+  color: rgb(38 38 38 / 0.5);
 }
 
-.button {
+.avatarSource::placeholder {
+  color: rgb(38 38 38 / 0.5);
+}
+
+.filled {
+  border-color: #f6b83d;
+  color: #262626;
+}
+
+.input:focus-visible {
+  outline: none;
+  border-color: #f6b83d;
+}
+
+.actions {
+  margin-top: 11px;
+}
+
+.saveButton {
+  width: 100%;
   height: 42px;
   border-radius: 30px;
   border: none;
+  background: #f6b83d;
+  color: #fff;
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.42px;
@@ -51,20 +184,95 @@
   cursor: pointer;
 }
 
-.cancel {
-  background: #fff4df;
-  color: #f6b83d;
+.saveButton:disabled,
+.uploadButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
-.save {
-  background: #f6b83d;
-  color: #fff;
+.error {
+  margin: 4px 0 0;
+  color: #dc3545;
+  font-size: 12px;
+  line-height: 1.3;
 }
 
 @media (min-width: 768px) {
-  .input,
-  .button {
-    height: 48px;
+  .panel {
+    width: 480px;
+    max-width: 480px;
+    height: 580px;
+  }
+
+  .body {
+    padding: 50px;
+  }
+
+  .content {
+    gap: 20px;
+  }
+
+  .title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .avatarCircle {
+    width: 86px;
+    height: 86px;
+  }
+
+  .uploadRow {
+    grid-template-columns: 226px 146px;
+  }
+
+  .avatarSource,
+  .uploadButton {
+    height: 42px;
+  }
+
+  .avatarSource {
+    padding: 12px;
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.28px;
+  }
+
+  .uploadText {
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: -0.28px;
+  }
+
+  .uploadButton {
+    gap: 8px;
+    font-size: 14px;
+    line-height: 18px;
+  }
+
+  .uploadIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .fields {
+    gap: 14px;
+  }
+
+  .input {
+    height: 52px;
+    padding: 16px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
+  }
+
+  .actions {
+    margin-top: 8px;
+  }
+
+  .saveButton {
+    height: 52px;
     font-size: 16px;
     line-height: 20px;
     letter-spacing: -0.48px;

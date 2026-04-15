@@ -14,10 +14,29 @@ export const LogoutConfirmModal = ({
   onConfirm,
   onClose,
 }: LogoutConfirmModalProps): React.ReactElement => (
-  <Modal isOpen={isOpen} onClose={onClose} title="Log out">
+  <Modal
+    isOpen={isOpen}
+    onClose={onClose}
+    title={undefined}
+    className={css.panel}
+    headerClassName={css.header}
+    closeButtonClassName={css.closeButton}
+    bodyClassName={css.body}
+  >
     <div className={css.content}>
-      <p className={css.text}>Are you sure you want to log out?</p>
+      <div className={css.iconCircle} aria-hidden="true">
+        <img className={css.petImage} src="/images/cat.webp" alt="" width={80} height={80} loading="lazy" decoding="async" />
+      </div>
+      <h3 className={css.title}>Already leaving?</h3>
       <div className={css.actions}>
+        <button
+          type="button"
+          className={`${css.button} ${css.confirmButton}`.trim()}
+          onClick={onConfirm}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Logging out...' : 'Yes'}
+        </button>
         <button
           type="button"
           className={`${css.button} ${css.cancelButton}`.trim()}
@@ -25,14 +44,6 @@ export const LogoutConfirmModal = ({
           disabled={isLoading}
         >
           Cancel
-        </button>
-        <button
-          type="button"
-          className={`${css.button} ${css.confirmButton}`.trim()}
-          onClick={onConfirm}
-          disabled={isLoading}
-        >
-          {isLoading ? 'Logging out...' : 'Log out'}
         </button>
       </div>
     </div>

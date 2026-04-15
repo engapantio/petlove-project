@@ -112,8 +112,13 @@ const ProfilePage = (): React.ReactElement => {
     navigate('/home');
   };
 
-  const handleEditProfileSubmit = async (formData: FormData): Promise<void> => {
-    await dispatch(updateUserProfile(formData)).unwrap();
+  const handleEditProfileSubmit = async (payload: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    avatar?: string;
+  }): Promise<void> => {
+    await dispatch(updateUserProfile(payload)).unwrap();
   };
 
   const handleToggleFavorite = (id: string): void => {
@@ -153,6 +158,7 @@ const ProfilePage = (): React.ReactElement => {
   const hasUserEmail = Boolean(user?.email?.trim());
   const hasUserPhone = Boolean(user?.phone?.trim());
   const avatarSrc = user?.avatar;
+  const hasAvatar = Boolean(user?.avatar?.trim());
   const hasPets = pets.length > 0;
   const viewedCards = viewedIds
     .map((id) => viewedLookup.get(id))
@@ -201,14 +207,16 @@ const ProfilePage = (): React.ReactElement => {
                 </span>
               )}
               </div>
-              <button
-                type="button"
-                className={css.avatarUploadButton}
-                onClick={() => setIsEditProfileModalOpen(true)}
-                disabled={authLoading || isRefreshing}
-              >
-                <span className={css.avatarUploadText}>Upload photo</span>
-              </button>
+              {!hasAvatar ? (
+                <button
+                  type="button"
+                  className={css.avatarUploadButton}
+                  onClick={() => setIsEditProfileModalOpen(true)}
+                  disabled={authLoading || isRefreshing}
+                >
+                  <span className={css.avatarUploadText}>Upload photo</span>
+                </button>
+              ) : null}
             </div>
           </div>
 

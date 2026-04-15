@@ -11,9 +11,14 @@ export const logoutApi = () =>
   instance.post('/users/signout');
 
 export const getCurrentUserApi = () =>
-  instance.get<User>('/users/current');
+  instance.get<User>('/users/current/full');
 
-export const updateUserApi = (data: FormData) =>
-  instance.patch<User>('/users/current/edit', data, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  });
+export interface UpdateUserPayload {
+  name?: string;
+  email?: string;
+  phone?: string;
+  avatar?: string;
+}
+
+export const updateUserApi = (data: UpdateUserPayload) =>
+  instance.patch<User>('/users/current/edit', data);

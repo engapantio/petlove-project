@@ -6,8 +6,12 @@ export interface User {
   phone?: string;
   avatar?: string;
   token: string;
-  /** Favorite notice objects returned by GET /users/current */
-  noticesFavorites?: Array<{ _id: string }>;
+  /** Full favorite notice objects returned by GET /users/current/full */
+  noticesFavorites?: Pet[];
+  /** Full viewed notice objects returned by GET /users/current/full */
+  noticesViewed?: Pet[];
+  /** Full current user pets returned by GET /users/current/full */
+  pets?: MyPet[];
 }
 
 export interface AuthState {
@@ -88,6 +92,7 @@ export interface NoticesState {
   favoriteIds: string[];
   favoriteItems: Pet[];
   favoriteRollbackCache: Record<string, Pet>;
+  isFavoritesInitialized: boolean;
   totalPages: number;
   currentPage: number;
   isLoading: boolean;

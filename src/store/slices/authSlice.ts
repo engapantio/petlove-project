@@ -6,6 +6,7 @@ import {
   logoutApi,
   getCurrentUserApi,
   updateUserApi,
+  type UpdateUserPayload,
 } from '../../api/auth';
 import type { AuthState, LoginCredentials, RegisterCredentials } from '../../types';
 
@@ -51,7 +52,11 @@ export const register = createAsyncThunk(
     try {
       const { data } = await registerApi(credentials);
       setAuthHeader(data.token);
-      return data;
+      const { data: fullUser } = await getCurrentUserApi();
+      return {
+        ...fullUser,
+        token: data.token,
+      };
     } catch (err: unknown) {
       return rejectWithValue((err as Error).message);
     }
@@ -64,7 +69,11 @@ export const login = createAsyncThunk(
     try {
       const { data } = await loginApi(credentials);
       setAuthHeader(data.token);
-      return data;
+      const { data: fullUser } = await getCurrentUserApi();
+      return {
+        ...fullUser,
+        token: data.token,
+      };
     } catch (err: unknown) {
       return rejectWithValue((err as Error).message);
     }
@@ -88,7 +97,10 @@ export const refreshUser = createAsyncThunk(
     setAuthHeader(auth.token);
     try {
       const { data } = await getCurrentUserApi();
-      return data;
+      return {
+        ...data,
+        token: auth.token,
+      };
     } catch (err: unknown) {
       return rejectWithValue((err as Error).message);
     }
@@ -97,10 +109,15 @@ export const refreshUser = createAsyncThunk(
 
 export const updateUserProfile = createAsyncThunk(
   'auth/updateUserProfile',
-  async (formData: FormData, { rejectWithValue }) => {
+  async (payload: UpdateUserPayload, { rejectWithValue }) => {
     try {
-      const { data } = await updateUserApi(formData);
-      return data;
+      const { data } = await updateUserApi(payload);
+      if (data.token) setAuthHeader(data.token);
+      const { data: fullUser } = await getCurrentUserApi();
+      return {
+        ...fullUser,
+        token: data.token ?? fullUser.token,
+      };
     } catch (err: unknown) {
       return rejectWithValue((err as Error).message);
     }

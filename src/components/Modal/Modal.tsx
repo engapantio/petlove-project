@@ -7,7 +7,49 @@ import {
   type ReactNode,
 } from 'react';
 import { createPortal } from 'react-dom';
+import { Icon } from '../Icon';
 import styles from './Modal.module.css';
+
+let openModalCount = 0;
+let previousBodyOverflow = '';
+let previousBodyPaddingRight = '';
+let previousHtmlOverflow = '';
+
+const lockDocumentScroll = (): void => {
+  if (openModalCount === 0) {
+    const html = document.documentElement;
+    const body = document.body;
+    const scrollbarWidth = window.innerWidth - html.clientWidth;
+
+    previousBodyOverflow = body.style.overflow;
+    previousBodyPaddingRight = body.style.paddingRight;
+    previousHtmlOverflow = html.style.overflow;
+
+    body.style.overflow = 'hidden';
+    html.style.overflow = 'hidden';
+
+    if (scrollbarWidth > 0) {
+      const currentBodyPaddingRight = window.getComputedStyle(body).paddingRight;
+      const numericPadding = Number.parseFloat(currentBodyPaddingRight) || 0;
+      body.style.paddingRight = `${numericPadding + scrollbarWidth}px`;
+    }
+  }
+
+  openModalCount += 1;
+};
+
+const unlockDocumentScroll = (): void => {
+  openModalCount = Math.max(0, openModalCount - 1);
+
+  if (openModalCount === 0) {
+    const html = document.documentElement;
+    const body = document.body;
+
+    body.style.overflow = previousBodyOverflow;
+    body.style.paddingRight = previousBodyPaddingRight;
+    html.style.overflow = previousHtmlOverflow;
+  }
+};
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface ModalProps {
@@ -20,6 +62,12 @@ interface ModalProps {
   children:  ReactNode;
   /** Extra class applied to the dialog panel (for per-modal sizing). */
   className?: string;
+  /** Extra class applied to header wrapper. */
+  headerClassName?: string;
+  /** Extra class applied to close button. */
+  closeButtonClassName?: string;
+  /** Extra class applied to body wrapper. */
+  bodyClassName?: string;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -29,6 +77,9 @@ export const Modal = ({
   title,
   children,
   className = '',
+  headerClassName = '',
+  closeButtonClassName = '',
+  bodyClassName = '',
 }: ModalProps): React.ReactElement | null => {
   const dialogRef   = useRef<HTMLDivElement>(null);
   const titleId     = 'modal-title';
@@ -50,14 +101,14 @@ export const Modal = ({
     previousFocusRef.current = document.activeElement as HTMLElement;
 
     document.addEventListener('keydown', handleKeyDown);
-    document.body.style.overflow = 'hidden';   // prevent background scroll
+    lockDocumentScroll();
 
     // Move focus into the dialog
     dialogRef.current?.focus();
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      unlockDocumentScroll();
       previousFocusRef.current?.focus();
     };
   }, [isOpen, handleKeyDown]);
@@ -92,7 +143,7 @@ export const Modal = ({
         tabIndex={-1}             /* makes the panel programmatically focusable */
       >
         {/* ── Header ───────────────────────────────────────────────────────── */}
-        <div className={styles.header}>
+        <div className={`${styles.header} ${headerClassName}`.trim()}>
           {title && (
             <h2 id={titleId} className={styles.title}>
               {title}
@@ -101,15 +152,15 @@ export const Modal = ({
           <button
             type="button"
             onClick={onClose}
-            className={styles.closeBtn}
+            className={`${styles.closeBtn} ${closeButtonClassName}`.trim()}
             aria-label="Close modal"
           >
-            ✕
+            <Icon id="close" width={24} height={24} />
           </button>
         </div>
 
         {/* ── Body ─────────────────────────────────────────────────────────── */}
-        <div className={styles.body}>{children}</div>
+        <div className={`${styles.body} ${bodyClassName}`.trim()}>{children}</div>
       </div>
     </div>,
     portalTarget,

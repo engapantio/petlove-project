@@ -1,32 +1,86 @@
-.content {
-  display: grid;
-  gap: var(--space-6);
+.panel {
+  width: 335px;
+  max-width: 335px;
+  height: 270px;
+  border-radius: 30px;
+  border: none;
+  box-shadow: none;
 }
 
-.text {
-  margin: 0;
-  font-size: var(--text-base);
-  line-height: var(--line-height-normal);
-  color: var(--color-text);
+.header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  padding: 0;
+}
+
+.closeButton {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  color: #262626;
+}
+
+.closeButton:hover {
+  background: transparent;
+  color: #262626;
+}
+
+.body {
+  height: 100%;
+  padding: 40px 28px;
+}
+
+.content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iconCircle {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  background: #fff4df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.petImage {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.title {
+  margin: 20px 0 0;
+  color: #2b2b2a;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: -0.6px;
+  font-weight: 700;
 }
 
 .actions {
+  margin-top: 28px;
+  width: 279px;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--space-3);
+  grid-template-columns: 137px 134px;
+  gap: 8px;
 }
 
 .button {
-  min-height: 44px;
-  border-radius: var(--radius-ui);
-  border: 1px solid transparent;
-  font-family: var(--font-body);
-  font-size: var(--text-base);
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-ui);
-  letter-spacing: var(--letter-spacing-ui);
+  height: 42px;
+  border: none;
+  border-radius: 30px;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.42px;
+  font-weight: 700;
   cursor: pointer;
-  transition: var(--transition-colors);
 }
 
 .button:disabled {
@@ -34,30 +88,44 @@
   cursor: not-allowed;
 }
 
-.cancelButton {
-  border-color: var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-}
-
-.cancelButton:hover:not(:disabled) {
-  border-color: var(--color-border-strong);
-  background: var(--color-surface-hover);
-}
-
 .confirmButton {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--color-text-inverse);
+  background: #f6b83d;
+  color: #fff;
 }
 
-.confirmButton:hover:not(:disabled) {
-  border-color: var(--color-primary-hover);
-  background: var(--color-primary-hover);
+.cancelButton {
+  background: rgb(38 38 38 / 0.05);
+  color: #262626;
 }
 
 @media (min-width: 768px) {
+  .panel {
+    width: 448px;
+    max-width: 448px;
+    height: 364px;
+  }
+
+  .body {
+    padding: 80px;
+  }
+
+  .title {
+    margin-top: 20px;
+    font-size: 24px;
+    line-height: 28px;
+    letter-spacing: -0.72px;
+  }
+
   .actions {
-    grid-template-columns: 1fr 1fr;
+    margin-top: 28px;
+    width: 288px;
+    grid-template-columns: 140px 140px;
+  }
+
+  .button {
+    height: 48px;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: -0.48px;
   }
 }

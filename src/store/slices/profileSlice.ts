@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { instance } from '../../api/axiosInstance';
 import type { ProfileState, MyPet, AddPetPayload } from '../../types';
 import type { RootState } from '..';
+import { login, refreshUser, register, updateUserProfile } from './authSlice';
 
 const initialState: ProfileState = {
   pets: [],
@@ -39,6 +40,39 @@ export const addMyPet = createAsyncThunk(
 const profileSlice = createSlice({
   name: 'profile', initialState, reducers: {},
   extraReducers: (builder) => {
+    const seedPetsFromAuthPayload = (s: ProfileState, payload: unknown): void => {
+      if (!payload || typeof payload !== 'object') return;
+      const candidate = payload as Record<string, unknown>;
+      const rawPets = candidate.pets;
+      if (!Array.isArray(rawPets)) return;
+      const nextPets = rawPets
+        .map((item) => {
+          if (!item || typeof item !== 'object') return null;
+          const pet = item as Record<string, unknown>;
+          const id = typeof pet._id === 'string' ? pet._id : '';
+          if (!id) return null;
+          return {
+            ...(pet as unknown as MyPet),
+            _id: id,
+          };
+        })
+        .filter((item): item is MyPet => Boolean(item));
+
+      // Avoid clobbering local state with identical stale data.
+      const currentIds = s.pets.map((pet) => pet._id).join('|');
+      const nextIds = nextPets.map((pet) => pet._id).join('|');
+      if (!s.hasLoaded || currentIds !== nextIds || nextPets.length >= s.pets.length) {
+        s.pets = nextPets;
+        s.hasLoaded = true;
+      }
+    };
+
+    builder
+      .addCase(refreshUser.fulfilled, (s, a) => seedPetsFromAuthPayload(s, a.payload))
+      .addCase(login.fulfilled, (s, a) => seedPetsFromAuthPayload(s, a.payload))
+      .addCase(register.fulfilled, (s, a) => seedPetsFromAuthPayload(s, a.payload))
+      .addCase(updateUserProfile.fulfilled, (s, a) => seedPetsFromAuthPayload(s, a.payload));
+
     builder
       .addCase(fetchMyPets.pending, (s) => { s.isLoading = true; s.error = null; })
       .addCase(fetchMyPets.fulfilled, (s, a) => {
