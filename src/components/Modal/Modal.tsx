@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useCallback,
   useRef,
   type KeyboardEvent,
   type MouseEvent,
@@ -84,43 +83,47 @@ export const Modal = ({
   const dialogRef   = useRef<HTMLDivElement>(null);
   const titleId     = 'modal-title';
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  const handleClose = (): void => {
+    onCloseRef.current();
+  };
 
-  // ── Escape key ───────────────────────────────────────────────────────────────
-  const handleKeyDown = useCallback(
-    (e: globalThis.KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    },
-    [onClose],
-  );
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   // ── Side effects ─────────────────────────────────────────────────────────────
   useEffect(() => {
     if (!isOpen) return;
 
+    const handleDocumentKeyDown = (e: globalThis.KeyboardEvent): void => {
+      if (e.key === 'Escape') onCloseRef.current();
+    };
+
     // Save current focus to restore on close
     previousFocusRef.current = document.activeElement as HTMLElement;
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleDocumentKeyDown);
     lockDocumentScroll();
 
     // Move focus into the dialog
     dialogRef.current?.focus();
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleDocumentKeyDown);
       unlockDocumentScroll();
       previousFocusRef.current?.focus();
     };
-  }, [isOpen, handleKeyDown]);
+  }, [isOpen]);
 
   // ── Backdrop click (only the overlay layer, not the panel) ───────────────────
   const handleBackdropClick = (e: MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
+    if (e.target === e.currentTarget) handleClose();
   };
 
   // ── Internal Escape via React synthetic events (dialog panel) ────────────────
   const handleDialogKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Escape') onClose();
+    if (e.key === 'Escape') handleClose();
   };
 
   if (!isOpen) return null;
@@ -151,7 +154,7 @@ export const Modal = ({
           )}
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className={`${styles.closeBtn} ${closeButtonClassName}`.trim()}
             aria-label="Close modal"
           >

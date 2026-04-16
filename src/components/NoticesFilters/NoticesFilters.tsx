@@ -8,7 +8,10 @@ import {
   type InputActionMeta,
 } from 'react-select';
 import Select from 'react-select';
-import { searchCitiesApi, type CityOption } from '../../api/cities';
+import {
+  searchCitiesApi,
+  type CityOption,
+} from '../../api/cities';
 import { Icon } from '../Icon';
 import css from './NoticesFilters.module.css';
 
@@ -81,14 +84,11 @@ export const NoticesFilters = ({
   const [locationInput, setLocationInput] = useState('');
   const [locationValue, setLocationValue] = useState<CityOption | null>(null);
 
-  // Keep UI and URL-derived locationId coherent without wiping user typing:
-  // - if locationId is cleared externally *and we had a selected option*, clear UI
-  // - if locationId changes externally away from the selected option, clear UI
+  // Keep UI and URL-derived locationId coherent without wiping user typing.
   useEffect(() => {
     let raf = 0;
 
     if (!values.location) {
-      // Allow typing while no locationId is selected.
       if (locationValue !== null) {
         raf = requestAnimationFrame(() => {
           setLocationValue(null);
@@ -96,8 +96,6 @@ export const NoticesFilters = ({
         });
       }
     } else if (locationValue && locationValue.value !== values.location) {
-      // If the external locationId changes and doesn't match the selected option,
-      // clear the visible label to avoid showing a stale city name.
       raf = requestAnimationFrame(() => {
         setLocationValue(null);
         setLocationInput('');
@@ -111,9 +109,8 @@ export const NoticesFilters = ({
 
   const loadLocations = async (inputValue: string): Promise<CityOption[]> => {
     const q = inputValue.trim();
-    // Swagger: min keyword length is 3
     if (q.length < 3) return [];
-    return await searchCitiesApi(q);
+    return searchCitiesApi(q);
   };
 
   type CityGroup = GroupBase<CityOption>;
@@ -230,7 +227,9 @@ export const NoticesFilters = ({
               isClearable={false}
               inputId="notices-location"
               aria-label={l.location}
-              noOptionsMessage={() => 'Type at least 3 characters'}
+              noOptionsMessage={({ inputValue }) =>
+                inputValue.trim().length < 3 ? 'Type at least 3 characters' : 'No locations found'
+              }
               components={{
                 DropdownIndicator: null,
                 IndicatorSeparator: null,

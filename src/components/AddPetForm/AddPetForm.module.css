@@ -102,8 +102,7 @@
 }
 
 .urlInput,
-.input,
-.select {
+.input {
   width: 100%;
   border: 1px solid rgb(38 38 38 / 15%);
   border-radius: 30px;
@@ -115,10 +114,6 @@
 
 .inputFilled {
   border-color: #f6b83d;
-}
-
-.selectPlaceholder {
-  color: rgb(38 38 38 / 50%);
 }
 
 .urlInput {

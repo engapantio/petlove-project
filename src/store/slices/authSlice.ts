@@ -83,9 +83,10 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk('auth/logout', async (_, { rejectWithValue }) => {
   try {
     await logoutApi();
-    clearAuthHeader();
   } catch (err: unknown) {
     return rejectWithValue((err as Error).message);
+  } finally {
+    clearAuthHeader();
   }
 });
 
@@ -152,6 +153,15 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (s, a) => { s.isLoading = false; s.error = a.payload as string; });
     builder.addCase(logout.fulfilled, (s) => {
+      s.user = null;
+      s.token = null;
+      s.isLoggedIn = false;
+      s.isAuthInitialized = true;
+      clearPersistedToken();
+    });
+    builder.addCase(logout.rejected, (s, a) => {
+      s.isLoading = false;
+      s.error = a.payload as string;
       s.user = null;
       s.token = null;
       s.isLoggedIn = false;

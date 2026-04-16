@@ -82,36 +82,18 @@ const extractFavoritesFromAuthPayload = (payload: unknown): Pet[] => {
   return [];
 };
 
-const hasServiceNotFoundError = (message: string): boolean => {
-  const normalized = message.toLowerCase();
-  return normalized.includes('service not found') || normalized.includes('not found');
-};
-
 const isConflictFavoriteError = (message: string): boolean => {
   const normalized = message.toLowerCase();
   return normalized.includes('already') || normalized.includes('earlier added');
 };
 
 const requestFavoriteToggle = async (id: string, isFavorite: boolean): Promise<unknown> => {
-  try {
-    if (isFavorite) {
-      const { data } = await instance.delete<unknown>(`/notices/favorites/${id}`);
-      return data;
-    }
-    const { data } = await instance.post<unknown>(`/notices/favorites/${id}`);
-    return data;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (!hasServiceNotFoundError(message)) throw error;
-
-    // Backward-compatible fallback for alternative backend route shape.
-    if (isFavorite) {
-      const { data } = await instance.delete<unknown>(`/notices/favorites/remove/${id}`);
-      return data;
-    }
-    const { data } = await instance.post<unknown>(`/notices/favorites/add/${id}`);
+  if (isFavorite) {
+    const { data } = await instance.delete<unknown>(`/notices/favorites/remove/${id}`);
     return data;
   }
+  const { data } = await instance.post<unknown>(`/notices/favorites/add/${id}`);
+  return data;
 };
 
 // ── Thunks ────────────────────────────────────────────────────────────────────
