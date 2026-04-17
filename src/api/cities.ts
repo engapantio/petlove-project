@@ -75,6 +75,13 @@ const dedupeCityOptions = (items: CityOption[]): CityOption[] => {
   return result;
 };
 
+const filterByPrefix = (options: CityOption[], query: string): CityOption[] => {
+  const normalizedQuery = normalizeText(query);
+  if (!normalizedQuery) return [];
+
+  return options.filter((option) => normalizeText(option.label).startsWith(normalizedQuery));
+};
+
 const loadCitiesFromEndpoint = async (path: string): Promise<CityOption[]> => {
   const { data } = await instance.get<unknown>(path);
   return toCityOptions(data);
@@ -105,7 +112,7 @@ export const searchCitiesApi = async (keyword: string): Promise<CityOption[]> =>
     const params = new URLSearchParams();
     params.set('keyword', normalizedKeyword);
     const results = await loadCitiesFromEndpoint(`/cities?${params.toString()}`);
-    return dedupeCityOptions(results);
+    return filterByPrefix(dedupeCityOptions(results), normalizedKeyword);
   } catch {
     return [];
   }

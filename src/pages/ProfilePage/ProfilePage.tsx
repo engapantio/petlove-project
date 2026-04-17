@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { EditProfileModal } from '../components/EditProfileModal';
-import { Icon } from '../components/Icon';
-import { NoticeModal } from '../components/NoticeModal';
-import { LogoutConfirmModal } from '../components/LogoutConfirmModal';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { logout, updateUserProfile } from '../store/slices/authSlice';
+import { EditProfileModal } from '../../components/EditProfileModal';
+import { Icon } from '../../components/Icon';
+import { NoticeModal } from '../../components/NoticeModal';
+import { LogoutConfirmModal } from '../../components/LogoutConfirmModal';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { logout, updateUserProfile } from '../../store/slices/authSlice';
 import {
   fetchNotices,
   toggleFavorite,
-} from '../store/slices/noticesSlice';
-import { markNoticeViewed } from '../store/slices/viewedNoticesSlice';
+} from '../../store/slices/noticesSlice';
+import { markNoticeViewed } from '../../store/slices/viewedNoticesSlice';
 import {
   deleteMyPet,
   fetchMyPets,
   selectMyPets,
   selectProfileHasLoaded,
   selectProfileLoading,
-} from '../store/slices/profileSlice';
-import type { MyPet, Pet } from '../types';
+} from '../../store/slices/profileSlice';
+import type { MyPet, Pet } from '../../types';
 import css from './ProfilePage.module.css';
 
 const formatBirthday = (value: string): string => {

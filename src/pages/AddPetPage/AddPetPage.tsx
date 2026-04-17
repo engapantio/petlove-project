@@ -1,5 +1,5 @@
-import { PetBlock } from '../components/PetBlock';
-import { AddPetForm } from '../components/AddPetForm';
+import { PetBlock } from '../../components/PetBlock';
+import { AddPetForm } from '../../components/AddPetForm';
 import styles from './AddPetPage.module.css';
 
 const AddPetPage = () => (

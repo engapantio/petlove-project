@@ -166,6 +166,21 @@
   border-color: #f6b83d;
 }
 
+.inputError {
+  border-color: #dc3545;
+}
+
+.inputError:focus-visible {
+  border-color: #dc3545;
+}
+
+.helperText {
+  margin: -2px 0 0;
+  color: rgb(38 38 38 / 0.5);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
 .actions {
   margin-top: 11px;
 }

@@ -179,6 +179,11 @@
     letter-spacing: -2.4px;
   }
 
+  /* Keep "of" on the first headline line on tablet. */
+  .headlineTabletDesktop .headlineLine:first-child {
+    white-space: nowrap;
+  }
+
   .lead {
     grid-row: 2;
     align-self: end;

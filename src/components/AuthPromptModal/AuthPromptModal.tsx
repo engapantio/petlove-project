@@ -27,7 +27,15 @@ export const AuthPromptModal = ({ isOpen, onClose }: AuthPromptModalProps): Reac
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={undefined} className={css.panel}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={undefined}
+      className={css.panel}
+      headerClassName={css.header}
+      closeButtonClassName={css.closeButton}
+      bodyClassName={css.modalBody}
+    >
       <div className={css.root}>
         <div className={css.iconWrap} aria-hidden="true">
           <div className={css.iconCircle}>
@@ -45,7 +53,7 @@ export const AuthPromptModal = ({ isOpen, onClose }: AuthPromptModalProps): Reac
 
         <div className={css.textBlock}>
           <p className={css.title}>Attention</p>
-          <p className={css.body}>{BODY_COPY}</p>
+          <p className={css.bodyText}>{BODY_COPY}</p>
         </div>
 
         <div className={css.actions}>

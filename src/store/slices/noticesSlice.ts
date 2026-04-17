@@ -208,7 +208,8 @@ const noticesSlice = createSlice({
       s.favoriteIds = [];
       s.favoriteItems = [];
       s.favoriteRollbackCache = {};
-      s.isFavoritesInitialized = false;
+      // Keep app bootstrap gate satisfied after logout; favorites are simply empty.
+      s.isFavoritesInitialized = true;
     });
 
     builder

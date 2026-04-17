@@ -13,7 +13,7 @@ import { RouteLoaderFallback } from './components/Loader';
 // ── Lazy-loaded pages ─────────────────────────────────────────────────────────
 const HomePage     = lazy(() => import('./pages/HomePage'));
 const MainPage     = lazy(() => import('./pages/MainPage'));
-const NewsPage     = lazy(() => import('./pages/NewsPage/NewsPage'));
+const NewsPage     = lazy(() => import('./pages/NewsPage'));
 const NoticesPage  = lazy(() => import('./pages/NoticesPage'));
 const FriendsPage  = lazy(() => import('./pages/FriendsPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));

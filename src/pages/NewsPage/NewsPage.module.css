@@ -69,6 +69,14 @@
   box-sizing: border-box;
 }
 
+.search :global(form > div) {
+  gap: 0;
+}
+
+.search :global(button[aria-label='Clear search']) {
+  margin-right: -10px;
+}
+
 @media (min-width: 768px) {
   .headerRow {
     flex-direction: row;

@@ -35,6 +35,7 @@ const URL_TO_SORT: Record<string, NoticesSortKey> = {
 };
 
 const ITEMS_PER_PAGE = 6;
+const SEARCH_DEBOUNCE_MS = 1000;
 
 // ── Filter state shape ────────────────────────────────────────────────────────
 interface LocalFilters {
@@ -103,6 +104,7 @@ const NoticesPage = () => {
   const [openNoticeId, setOpenNoticeId] = useState<string | null>(null);
   const [isAuthPromptOpen, setIsAuthPromptOpen] = useState(false);
   const lastErrorToastRef = useRef<string | null>(null);
+  const searchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /**
    * Derive filter state and page directly from the URL.
@@ -138,6 +140,10 @@ const NoticesPage = () => {
     return () => {
       dispatch(clearNoticesError());
       lastErrorToastRef.current = null;
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
     };
   }, [dispatch]);
 
@@ -150,18 +156,53 @@ const NoticesPage = () => {
 
   // ── Handlers ──────────────────────────────────────────────────────────────
 
+  const applyFilterParams = useCallback(
+    (nextFilters: LocalFilters, replace: boolean) => {
+      const nextUrl = toUrl(nextFilters, 1);
+      setSearchParams((current) => {
+        if (nextUrl.toString() === current.toString()) return current;
+        return nextUrl;
+      }, { replace });
+    },
+    [setSearchParams],
+  );
+
   // Filter changes replace the current history entry (no keystroke history spam)
   const handleFiltersChange = useCallback(
     (patch: Partial<LocalFilters>) => {
-      setSearchParams(toUrl({ ...localFilters, ...patch }, 1), { replace: true });
+      const nextFilters = { ...localFilters, ...patch };
+      const isSearchOnlyPatch = Object.keys(patch).length === 1 && 'search' in patch;
+
+      if (isSearchOnlyPatch) {
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = setTimeout(() => {
+          applyFilterParams(nextFilters, true);
+          searchDebounceRef.current = null;
+        }, SEARCH_DEBOUNCE_MS);
+        return;
+      }
+
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
+      applyFilterParams(nextFilters, true);
     },
-    [localFilters, setSearchParams],
+    [applyFilterParams, localFilters],
   );
 
   // Page changes push a new history entry so back / forward works per page
   const handlePageChange = useCallback(
     (p: number) => {
-      setSearchParams(toUrl(localFilters, p), { replace: false });
+      if (searchDebounceRef.current) {
+        clearTimeout(searchDebounceRef.current);
+        searchDebounceRef.current = null;
+      }
+      const nextUrl = toUrl(localFilters, p);
+      setSearchParams((current) => {
+        if (nextUrl.toString() === current.toString()) return current;
+        return nextUrl;
+      }, { replace: false });
     },
     [localFilters, setSearchParams],
   );

@@ -1,1 +1,3 @@
-export * from './NewsPage';
+import NewsPage from './NewsPage';
+
+export default NewsPage;

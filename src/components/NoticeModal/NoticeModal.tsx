@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { NoticeDetails } from '../../types';
 import { getNoticeByIdApi } from '../../api/notices';
@@ -23,6 +23,11 @@ const getImageSrc = (d: NoticeDetails | null): string => {
 };
 
 const clampRating = (v: number): number => Math.max(0, Math.min(5, v));
+const capitalizeFirst = (value: string | null | undefined): string => {
+  const normalized = (value ?? '').trim();
+  if (!normalized) return '';
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+};
 
 export const NoticeModal = ({
   isOpen,
@@ -34,28 +39,41 @@ export const NoticeModal = ({
   const [data, setData] = useState<NoticeDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestSeqRef = useRef(0);
 
   const imgSrc = useMemo(() => getImageSrc(data), [data]);
   const categoryLabel = useMemo(() => (data?.category ? data.category : ''), [data?.category]);
   const rating = useMemo(() => clampRating(Math.round(data?.popularity ?? 0)), [data?.popularity]);
 
   const fetchDetails = useCallback(async (id: string) => {
+    const requestSeq = ++requestSeqRef.current;
     setIsLoading(true);
     setError(null);
+    setData(null);
     try {
       const res = await getNoticeByIdApi(id);
+      if (requestSeq !== requestSeqRef.current) return;
       setData(res.data);
     } catch (e: unknown) {
+      if (requestSeq !== requestSeqRef.current) return;
       const message = (e as Error).message || 'Failed to load notice details';
       setError(message);
       setData(null);
     } finally {
-      setIsLoading(false);
+      if (requestSeq === requestSeqRef.current) {
+        setIsLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
-    if (!isOpen || !noticeId) return;
+    if (!isOpen || !noticeId) {
+      requestSeqRef.current += 1;
+      setData(null);
+      setError(null);
+      setIsLoading(false);
+      return;
+    }
     void fetchDetails(noticeId);
   }, [fetchDetails, isOpen, noticeId]);
 
@@ -74,10 +92,11 @@ export const NoticeModal = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      // Figma shows the close icon hidden; keep the shared close affordance but avoid
-      // adding an extra title bar in the header.
       title={undefined}
       className={css.panel}
+      headerClassName={css.header}
+      closeButtonClassName={css.closeButton}
+      bodyClassName={css.modalBody}
     >
       <div className={css.root}>
         <div className={css.hero}>
@@ -142,11 +161,11 @@ export const NoticeModal = ({
               </div>
               <div className={css.metaItem}>
                 <dt className={css.metaLabel}>Sex</dt>
-                <dd className={css.metaValue}>{data.sex}</dd>
+                <dd className={css.metaValue}>{capitalizeFirst(data.sex)}</dd>
               </div>
               <div className={css.metaItem}>
                 <dt className={css.metaLabel}>Species</dt>
-                <dd className={css.metaValue}>{data.species}</dd>
+                <dd className={css.metaValue}>{capitalizeFirst(data.species)}</dd>
               </div>
             </dl>
 
@@ -165,7 +184,7 @@ export const NoticeModal = ({
                   aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
                   onClick={() => noticeId && onToggleFavorite(noticeId)}
                 >
-                  <span>Add to</span>
+                  <span>{isFavorite ? 'Remove from' : 'Add to'}</span>
                   <Icon
                     id={isFavorite ? 'heart-filled' : 'heart'}
                     width={18}

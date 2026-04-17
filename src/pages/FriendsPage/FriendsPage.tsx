@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { FriendsList } from '../components/FriendsList/FriendsList';
-import { FriendsListSkeleton } from '../components/FriendsList/FriendsListSkeleton';
-import { useAppDispatch, useAppSelector } from '../hooks/redux';
-import { fetchFriends } from '../store/slices/friendsSlice';
+import { FriendsList } from '../../components/FriendsList/FriendsList';
+import { FriendsListSkeleton } from '../../components/FriendsList/FriendsListSkeleton';
+import { useAppDispatch, useAppSelector } from '../../hooks/redux';
+import { fetchFriends } from '../../store/slices/friendsSlice';
 import css from './FriendsPage.module.css';
 
 const FriendsPage = () => {

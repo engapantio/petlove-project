@@ -1,4 +1,7 @@
-import { useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 import { toast } from 'react-toastify';
 import { Icon } from '../Icon';
 import { Modal } from '../Modal';
@@ -6,6 +9,31 @@ import type { User } from '../../types';
 import css from './EditProfileModal.module.css';
 
 const imageUrlRegex = /^https?:\/\/.*\.(?:png|jpg|jpeg|gif|bmp|webp)$/;
+const phoneDigitsRegex = /^\+38\d{10}$/;
+const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+
+interface EditProfileFormValues {
+  name: string;
+  email: string;
+  avatar: string;
+  phone: string;
+}
+
+const editUserSchema: yup.ObjectSchema<EditProfileFormValues> = yup.object({
+  name: yup.string().defined(),
+  email: yup
+    .string()
+    .matches(emailRegex, { message: 'Invalid email', excludeEmptyString: true })
+    .defined(),
+  avatar: yup
+    .string()
+    .matches(imageUrlRegex, { message: 'Invalid image URL', excludeEmptyString: true })
+    .defined(),
+  phone: yup
+    .string()
+    .matches(phoneDigitsRegex, { message: 'Format: +38XXXXXXXXXX', excludeEmptyString: true })
+    .defined(),
+});
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -22,20 +50,52 @@ export const EditProfileModal = ({
   onClose,
   onSubmit,
 }: EditProfileModalProps): React.ReactElement | null => {
-  const [name, setName] = useState(user?.name ?? '');
-  const [email, setEmail] = useState(user?.email ?? '');
-  const [phone, setPhone] = useState(user?.phone ?? '');
-  const [avatarUrl, setAvatarUrl] = useState(user?.avatar ?? '');
-  const [avatarError, setAvatarError] = useState('');
   const avatarUrlInputRef = useRef<HTMLInputElement>(null);
+  const wasModalOpenRef = useRef(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<EditProfileFormValues>({
+    resolver: yupResolver(editUserSchema),
+    mode: 'onBlur',
+    defaultValues: {
+      name: user?.name ?? '',
+      email: user?.email ?? '',
+      phone: user?.phone ?? '',
+      avatar: user?.avatar ?? '',
+    },
+  });
 
-  const resetFormState = (sourceUser: User | null): void => {
-    setName(sourceUser?.name ?? '');
-    setEmail(sourceUser?.email ?? '');
-    setPhone(sourceUser?.phone ?? '');
-    setAvatarUrl(sourceUser?.avatar ?? '');
-    setAvatarError('');
-  };
+  const name = watch('name') ?? '';
+  const email = watch('email') ?? '';
+  const phone = watch('phone') ?? '';
+  const avatarUrl = watch('avatar') ?? '';
+
+  const normalizePhone = (value: string): string =>
+    value.replace(/\s+/g, '').replace(/[-()]/g, '');
+
+  const resetFormState = useCallback((sourceUser: User | null): void => {
+    reset({
+      name: sourceUser?.name ?? '',
+      email: sourceUser?.email ?? '',
+      phone: sourceUser?.phone ?? '',
+      avatar: sourceUser?.avatar ?? '',
+    });
+  }, [reset]);
+
+  useEffect(() => {
+    if (!isOpen) {
+      wasModalOpenRef.current = false;
+      return;
+    }
+    if (!wasModalOpenRef.current) {
+      resetFormState(user);
+    }
+    wasModalOpenRef.current = true;
+  }, [isOpen, resetFormState, user]);
 
   const handleClose = (): void => {
     resetFormState(user);
@@ -52,22 +112,16 @@ export const EditProfileModal = ({
 
   if (!isOpen) return null;
 
-  const handleSave = async (): Promise<void> => {
+  const handleSave = async (values: EditProfileFormValues): Promise<void> => {
     const payload: { name?: string; email?: string; phone?: string; avatar?: string } = {};
-    const normalizedName = name.trim();
-    const normalizedEmail = email.trim();
-    const normalizedPhone = phone.trim();
-    const normalizedAvatar = avatarUrl.trim();
-
-    if (normalizedAvatar && !imageUrlRegex.test(normalizedAvatar)) {
-      setAvatarError('Invalid image URL');
-      return;
-    }
-    setAvatarError('');
+    const normalizedName = (values.name ?? '').trim();
+    const normalizedEmail = (values.email ?? '').trim();
+    const normalizedPhone = normalizePhone((values.phone ?? '').trim());
+    const normalizedAvatar = (values.avatar ?? '').trim();
 
     if (normalizedName !== (user?.name ?? '')) payload.name = normalizedName;
     if (normalizedEmail !== (user?.email ?? '')) payload.email = normalizedEmail;
-    if (normalizedPhone !== (user?.phone ?? '')) payload.phone = normalizedPhone;
+    if (normalizedPhone !== normalizePhone(user?.phone ?? '')) payload.phone = normalizedPhone;
     if (normalizedAvatar !== (user?.avatar ?? '')) payload.avatar = normalizedAvatar;
 
     if (!hasChanges) {
@@ -91,6 +145,7 @@ export const EditProfileModal = ({
   const isNameFilled = name.trim().length > 0;
   const isEmailFilled = email.trim().length > 0;
   const isPhoneFilled = phone.trim().length > 0;
+  const avatarField = register('avatar');
 
   return (
     <Modal
@@ -102,7 +157,7 @@ export const EditProfileModal = ({
       closeButtonClassName={css.closeButton}
       bodyClassName={css.body}
     >
-      <div className={css.content}>
+      <form className={css.content} onSubmit={handleSubmit(handleSave)} noValidate>
         <div className={css.infoGroup}>
           <h3 className={css.title}>Edit information</h3>
           <div className={css.avatarGroup}>
@@ -122,23 +177,14 @@ export const EditProfileModal = ({
             </div>
             <div className={css.uploadRow}>
               <input
-                ref={avatarUrlInputRef}
+                {...avatarField}
+                ref={(element) => {
+                  avatarField.ref(element);
+                  avatarUrlInputRef.current = element;
+                }}
                 className={`${css.avatarSource} ${hasAvatarSourceText ? css.filled : ''}`.trim()}
                 placeholder="Enter URL"
                 type="text"
-                value={avatarUrl}
-                onChange={(event) => {
-                  setAvatarUrl(event.target.value);
-                  if (avatarError) setAvatarError('');
-                }}
-                onBlur={() => {
-                  const nextValue = avatarUrl.trim();
-                  if (nextValue && !imageUrlRegex.test(nextValue)) {
-                    setAvatarError('Invalid image URL');
-                    return;
-                  }
-                  setAvatarError('');
-                }}
                 disabled={isLoading}
               />
               <button
@@ -151,7 +197,7 @@ export const EditProfileModal = ({
                 <Icon id="upload-cloud" width={18} height={18} className={css.uploadIcon} />
               </button>
             </div>
-            {avatarError ? <p className={css.error}>{avatarError}</p> : null}
+            {errors.avatar ? <p className={css.error}>{errors.avatar.message}</p> : null}
           </div>
         </div>
 
@@ -159,40 +205,39 @@ export const EditProfileModal = ({
           <input
             className={`${css.input} ${isNameFilled ? css.filled : ''}`.trim()}
             type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            {...register('name')}
             placeholder="Name"
             disabled={isLoading}
           />
           <input
             className={`${css.input} ${isEmailFilled ? css.filled : ''}`.trim()}
             type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            {...register('email')}
             placeholder="Email"
             disabled={isLoading}
           />
+          {errors.email ? <p className={css.error}>{errors.email.message}</p> : null}
           <input
-            className={`${css.input} ${isPhoneFilled ? css.filled : ''}`.trim()}
+            className={`${css.input} ${isPhoneFilled ? css.filled : ''} ${errors.phone ? css.inputError : ''}`.trim()}
             type="tel"
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
-            placeholder="+380"
+            {...register('phone')}
+            placeholder="+38"
             disabled={isLoading}
           />
+          <p className={css.helperText}>Format: +38XXXXXXXXXX</p>
+          {errors.phone ? <p className={css.error}>{errors.phone.message}</p> : null}
         </div>
 
         <div className={css.actions}>
           <button
-            type="button"
+            type="submit"
             className={css.saveButton}
-            onClick={() => void handleSave()}
             disabled={isLoading}
           >
             {isLoading ? 'Saving...' : 'Save'}
           </button>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 };

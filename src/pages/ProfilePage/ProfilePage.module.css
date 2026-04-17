@@ -273,12 +273,17 @@
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 8px;
+  row-gap: 6px;
 }
 
 .petMeta li {
   min-width: 0;
+}
+
+.petMeta li:nth-child(4) {
+  grid-column: 1 / -1;
 }
 
 .petMeta span {
@@ -297,9 +302,6 @@
   letter-spacing: -0.24px;
   font-weight: 500;
   color: #262626;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .petDeleteStub {
@@ -479,8 +481,9 @@
   padding: 0;
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(5, minmax(max-content, 1fr));
+  column-gap: 6px;
+  row-gap: 6px;
 }
 
 .favoriteMeta li {
@@ -504,8 +507,6 @@
   font-weight: 500;
   color: #262626;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .favoriteDescription {
@@ -678,6 +679,15 @@
     grid-template-columns: 75px minmax(0, 1fr);
   }
 
+  .petMeta {
+    grid-template-columns: repeat(3, max-content);
+    column-gap: 10px;
+  }
+
+  .petMeta li:nth-child(4) {
+    grid-column: 1 / -1;
+  }
+
   .petImageWrap {
     width: 75px;
     height: 75px;
@@ -737,6 +747,10 @@
 
   .favoriteCardBody {
     margin-top: 14px;
+  }
+
+  .favoriteMeta {
+    column-gap: 8px;
   }
 
   .favoriteTitle {
@@ -804,6 +818,17 @@
     height: 130px;
     grid-template-columns: 90px minmax(0, 1fr);
     padding: 20px;
+  }
+
+  .petMeta {
+    grid-template-columns: repeat(4, max-content);
+    column-gap: 8px;
+    row-gap: 0;
+    justify-content: space-between;
+  }
+
+  .petMeta li:nth-child(4) {
+    grid-column: auto;
   }
 
   .petImageWrap {

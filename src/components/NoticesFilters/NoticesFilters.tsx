@@ -1,14 +1,16 @@
 import { SearchField } from '../SearchField';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import {
   components,
+  type FormatOptionLabelMeta,
   type IndicatorsContainerProps,
   type GroupBase,
   type InputActionMeta,
 } from 'react-select';
 import Select from 'react-select';
 import {
+  fetchCityLocationsApi,
   searchCitiesApi,
   type CityOption,
 } from '../../api/cities';
@@ -43,6 +45,8 @@ interface NoticesFiltersProps {
   labels?: Partial<Record<keyof Omit<NoticesFiltersValues, 'sort'>, string>>;
 }
 
+const locationOptionCache = new Map<string, CityOption>();
+
 export const NoticesFilters = ({
   values,
   onChange,
@@ -62,6 +66,15 @@ export const NoticesFilters = ({
   const setSort = (sort: NoticesSortKey) => {
     onChange({ sort: values.sort === sort ? null : sort });
   };
+
+  const hasActiveFilters = Boolean(
+    values.search ||
+    values.category ||
+    values.gender ||
+    values.type ||
+    values.location ||
+    values.sort,
+  );
 
   type SimpleOption = { value: string; label: string };
 
@@ -83,26 +96,60 @@ export const NoticesFilters = ({
 
   const [locationInput, setLocationInput] = useState('');
   const [locationValue, setLocationValue] = useState<CityOption | null>(null);
+  const locationCacheRef = useRef(locationOptionCache);
+  const attemptedLocationHydrationRef = useRef(new Set<string>());
+  const previousLocationRef = useRef(values.location);
+  const [searchInput, setSearchInput] = useState(values.search);
+  const lastSubmittedSearchRef = useRef(values.search);
+
+  useEffect(() => {
+    if (values.search === lastSubmittedSearchRef.current) return;
+    const raf = requestAnimationFrame(() => {
+      setSearchInput(values.search);
+      lastSubmittedSearchRef.current = values.search;
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [values.search]);
 
   // Keep UI and URL-derived locationId coherent without wiping user typing.
   useEffect(() => {
     let raf = 0;
+    let isActive = true;
+    const locationWasClearedFromUrl = Boolean(previousLocationRef.current) && !values.location;
 
     if (!values.location) {
-      if (locationValue !== null) {
+      // Clear visible selection/query only when URL location was just cleared
+      // or a selected option is still mounted.
+      if (locationValue !== null || locationWasClearedFromUrl) {
         raf = requestAnimationFrame(() => {
           setLocationValue(null);
           setLocationInput('');
         });
       }
-    } else if (locationValue && locationValue.value !== values.location) {
-      raf = requestAnimationFrame(() => {
-        setLocationValue(null);
-        setLocationInput('');
-      });
+    } else if (!locationValue || locationValue.value !== values.location) {
+      const cached = locationCacheRef.current.get(values.location);
+      if (cached) {
+        raf = requestAnimationFrame(() => {
+          setLocationValue(cached);
+        });
+      } else if (!attemptedLocationHydrationRef.current.has(values.location)) {
+        attemptedLocationHydrationRef.current.add(values.location);
+        void (async () => {
+          const allLocations = await fetchCityLocationsApi();
+          if (!isActive) return;
+          allLocations.forEach((option) => locationCacheRef.current.set(option.value, option));
+          const resolved = locationCacheRef.current.get(values.location);
+          if (!resolved) return;
+          raf = requestAnimationFrame(() => {
+            setLocationValue(resolved);
+          });
+        })();
+      }
     }
+    previousLocationRef.current = values.location;
 
     return () => {
+      isActive = false;
       if (raf) cancelAnimationFrame(raf);
     };
   }, [locationValue, values.location]);
@@ -110,7 +157,50 @@ export const NoticesFilters = ({
   const loadLocations = async (inputValue: string): Promise<CityOption[]> => {
     const q = inputValue.trim();
     if (q.length < 3) return [];
-    return searchCitiesApi(q);
+    const items = await searchCitiesApi(q);
+    items.forEach((item) => locationCacheRef.current.set(item.value, item));
+    return items;
+  };
+
+  const normalizeLocationText = (value: string): string =>
+    value.toLowerCase().trim().replace(/\s+/g, ' ');
+
+  const getHighlightedLocationLabel = (label: string, input: string): React.ReactNode => {
+    const normalizedInput = normalizeLocationText(input);
+    if (normalizedInput.length < 3) {
+      return <span className={css.locationLabelRest}>{label}</span>;
+    }
+
+    const normalizedLabel = normalizeLocationText(label);
+    if (!normalizedLabel.startsWith(normalizedInput)) {
+      return <span className={css.locationLabelRest}>{label}</span>;
+    }
+
+    const normalizedTypedLength = normalizedInput.length;
+    const typedPart = label.slice(0, normalizedTypedLength);
+    const restPart = label.slice(normalizedTypedLength);
+
+    return (
+      <>
+        <span className={css.locationLabelTyped}>{typedPart}</span>
+        <span className={css.locationLabelRest}>{restPart}</span>
+      </>
+    );
+  };
+
+  const handleReset = () => {
+    setSearchInput('');
+    lastSubmittedSearchRef.current = '';
+    setLocationInput('');
+    setLocationValue(null);
+    onChange({
+      search: '',
+      category: '',
+      gender: '',
+      type: '',
+      location: '',
+      sort: null,
+    });
   };
 
   type CityGroup = GroupBase<CityOption>;
@@ -155,9 +245,17 @@ export const NoticesFilters = ({
         <div className={css.controls}>
           <div className={css.search}>
             <SearchField
-              value={values.search}
-              onChange={(v) => onChange({ search: v })}
-              onSearch={(v) => onChange({ search: v })}
+              value={searchInput}
+              onChange={(v) => {
+                setSearchInput(v);
+                lastSubmittedSearchRef.current = v;
+                onChange({ search: v });
+              }}
+              onSearch={(v) => {
+                setSearchInput(v);
+                lastSubmittedSearchRef.current = v;
+                onChange({ search: v });
+              }}
               placeholder={l.search}
               label="Search notices"
             />
@@ -213,14 +311,22 @@ export const NoticesFilters = ({
               inputValue={locationInput}
               onInputChange={(next, meta: InputActionMeta) => {
                 // Keep typing visible and searchable.
-                if (meta.action === 'input-change') setLocationInput(next);
-                // When an option is selected, react-select may request input reset.
-                if (meta.action === 'set-value') setLocationInput(next);
+                if (meta.action === 'input-change') {
+                  setLocationInput(next);
+                  // Drop URL + internal value whenever the user edits the field (including
+                  // clearing to empty). Selection from the menu uses `set-value`, not
+                  // `input-change`, so we do not clear right after picking an option.
+                  if (locationValue) {
+                    setLocationValue(null);
+                    onChange({ location: '' });
+                  }
+                }
                 return next;
               }}
               onChange={(opt) => {
+                if (opt) locationCacheRef.current.set(opt.value, opt);
                 setLocationValue(opt ?? null);
-                setLocationInput(opt?.label ?? '');
+                setLocationInput('');
                 onChange({ location: opt?.value ?? '' });
               }}
               placeholder={l.location}
@@ -230,6 +336,13 @@ export const NoticesFilters = ({
               noOptionsMessage={({ inputValue }) =>
                 inputValue.trim().length < 3 ? 'Type at least 3 characters' : 'No locations found'
               }
+              formatOptionLabel={(option: CityOption, meta: FormatOptionLabelMeta<CityOption>) => {
+                if (meta.context === 'value') {
+                  return <span className={css.locationLabelTyped}>{option.label}</span>;
+                }
+                const query = meta.inputValue || locationInput;
+                return getHighlightedLocationLabel(option.label, query);
+              }}
               components={{
                 DropdownIndicator: null,
                 IndicatorSeparator: null,
@@ -288,6 +401,16 @@ export const NoticesFilters = ({
               </span>
             ) : null}
           </button>
+          {hasActiveFilters ? (
+            <button
+              type="button"
+              className={css.resetButton}
+              onClick={handleReset}
+              aria-label="Reset all notices filters"
+            >
+              Reset
+            </button>
+          ) : null}
         </div>
       </div>
     </section>

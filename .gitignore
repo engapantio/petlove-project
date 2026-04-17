@@ -28,3 +28,7 @@ dist-ssr
 .cursorrules
 .cursor/
 docs/
+tmp/
+test-results/
+playwright-report/
+.vercel/

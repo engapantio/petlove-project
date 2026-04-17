@@ -5,6 +5,37 @@
   max-width: 473px;
   background: #ffffff;
   border-radius: 30px;
+  overflow: hidden;
+}
+
+.header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  padding: 0;
+}
+
+.closeButton {
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  color: #262626 !important;
+}
+
+.closeButton:hover {
+  background: transparent !important;
+  color: #262626 !important;
+}
+
+.closeButton :global(svg) {
+  width: 20px;
+  height: 20px;
+}
+
+.modalBody {
+  height: 100%;
+  padding: 0;
 }
 
 .root {
@@ -57,7 +88,9 @@
   padding: 16px 40px 0;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
+  text-align: center;
 }
 
 .title {
@@ -118,10 +151,12 @@
   display: grid;
   grid-template-columns: repeat(4, max-content);
   column-gap: 26px;
+  justify-content: center;
 }
 
 .metaItem {
   margin: 0;
+  text-align: center;
 }
 
 .metaLabel {
@@ -153,6 +188,7 @@
   font-size: 14px;
   line-height: 18px;
   letter-spacing: -0.28px;
+  text-align: center;
 }
 
 .bottomRow {
@@ -160,6 +196,7 @@
   padding: 16px 40px 32px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
 }
 
@@ -169,6 +206,7 @@
   font-weight: 700;
   font-size: 18px;
   line-height: 24px;
+  text-align: center;
 }
 
 .actions {
@@ -210,6 +248,7 @@
 
 .state {
   padding: 16px 40px 0;
+  text-align: center;
 }
 
 .stateTitle {
@@ -229,6 +268,7 @@
   margin-top: 12px;
   display: flex;
   gap: 12px;
+  justify-content: center;
 }
 
 @media (max-width: 480px) {

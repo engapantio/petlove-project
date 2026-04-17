@@ -4,6 +4,37 @@
   max-width: 466px;
   background: #ffffff;
   border-radius: 30px;
+  overflow: hidden;
+}
+
+.header {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  padding: 0;
+}
+
+.closeButton {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  color: #262626 !important;
+}
+
+.closeButton:hover {
+  background: transparent !important;
+  color: #262626 !important;
+}
+
+.closeButton :global(svg) {
+  width: 24px;
+  height: 24px;
+}
+
+.modalBody {
+  height: 100%;
+  padding: 0;
 }
 
 .root {
@@ -52,7 +83,7 @@
   letter-spacing: -0.72px;
 }
 
-.body {
+.bodyText {
   margin: 0;
   color: #2b2b2a;
   font-family: Manrope, system-ui, -apple-system, sans-serif;
