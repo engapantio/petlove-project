@@ -61,12 +61,8 @@ Screenshots are included in the `screenshots/` folder.
 
 ## Live Demo
 
-- Public deployment: _not configured yet (ready for Vercel deployment)_
+- Public deployment: [https://petlove-project-one.vercel.app](https://petlove-project-one.vercel.app)
 - Local demo: follow the Quick Start section below
-
-### GitHub Markdown Check
-
-- README image paths use relative links (`./screenshots/...`) and are valid for GitHub rendering.
 
 ## Quick Start
 
