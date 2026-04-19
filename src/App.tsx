@@ -34,9 +34,15 @@ const App = () => {
    *  via redux-persist or equivalent) and calls GET /users/current. */
   useEffect(() => {
     let isMounted = true;
+    const BOOT_FALLBACK_MS = 5_000;
 
     const bootstrap = async (): Promise<void> => {
-      await dispatch(refreshUser());
+      await Promise.race([
+        dispatch(refreshUser()),
+        new Promise<void>((resolve) => {
+          window.setTimeout(resolve, BOOT_FALLBACK_MS);
+        }),
+      ]);
       if (isMounted) setIsBootReady(true);
     };
 

@@ -5,6 +5,13 @@ import type {
   InternalAxiosRequestConfig,
 } from 'axios';
 
+const DEFAULT_API_BASE = 'https://petlove.b.goit.study/api';
+
+const normalizeBaseUrl = (raw: string): string => {
+  const trimmed = raw.trim().replace(/\/+$/, '');
+  return trimmed.length > 0 ? `${trimmed}/` : `${DEFAULT_API_BASE}/`;
+};
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface ApiErrorResponse {
   message?: string;
@@ -12,7 +19,13 @@ interface ApiErrorResponse {
 }
 
 // ── Instance ──────────────────────────────────────────────────────────────────
-export const BASE_URL = 'https://petlove.b.goit.study/api/';
+const envBase =
+  typeof import.meta.env.VITE_API_BASE_URL === 'string'
+    ? import.meta.env.VITE_API_BASE_URL.trim()
+    : '';
+
+/** Reads `VITE_API_BASE_URL` at build time; falls back to hosted GoIT API. */
+export const BASE_URL = normalizeBaseUrl(envBase.length > 0 ? envBase : DEFAULT_API_BASE);
 
 export const instance: AxiosInstance = axios.create({
   baseURL: BASE_URL,

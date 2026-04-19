@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { RegisterForm, type RegisterFormValues } from '../../components/RegisterForm/RegisterForm';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { register as registerUser } from '../../store/slices/authSlice';
+import { resolveThunkRejectMessage } from '../../utils/mapApiErrorMessage';
 import styles from './RegisterPage.module.css';
 
 const RegisterPage = () => {
@@ -15,9 +16,8 @@ const RegisterPage = () => {
       const { name, email, password } = data;
       await dispatch(registerUser({ name, email, password })).unwrap();
       navigate('/profile');
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Something went wrong';
-      toast.error(message);
+    } catch (err: unknown) {
+      toast.error(resolveThunkRejectMessage(err));
     }
   };
 

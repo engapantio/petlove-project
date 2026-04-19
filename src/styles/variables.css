@@ -195,27 +195,3 @@
   }
 }
 
-/* Optional dark scheme — keeps contrast; aligns with existing modal/loader */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-page: #141414;
-    --color-bg-warm: #1a1816;
-    --color-surface: #1e1e1e;
-    --color-surface-elevated: #252525;
-    --color-surface-hover: #2e2e2e;
-    --color-surface-muted: #222222;
-
-    --color-border: #3a3a3a;
-    --color-border-subtle: #2e2e2e;
-    --color-border-strong: #4a4a4a;
-
-    --color-text: #f0f0f0;
-    --color-text-secondary: #c4c4c4;
-    --color-text-muted: #9a9a9a;
-
-    --color-backdrop: rgb(0 0 0 / 0.65);
-    --color-backdrop-loader: rgb(20 20 20 / 0.75);
-
-    --color-primary-muted: color-mix(in srgb, var(--color-primary) 18%, #1e1e1e);
-  }
-}

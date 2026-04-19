@@ -1,5 +1,4 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { Loader } from '../Loader';
 import Header from './Header';
 
 const isHomeRoute = (pathname: string): boolean =>
@@ -13,7 +12,6 @@ const Layout = () => {
 
   return (
     <div className="pl-layout">
-      <Loader />
       {showGlobalHeader && <Header />}
       <main className="pl-main">
         <Outlet />

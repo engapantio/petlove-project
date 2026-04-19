@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import { instance } from '../../api/axiosInstance';
 import { login, logout, refreshUser, register, updateUserProfile } from './authSlice';
 import type { NoticesState, NoticesFilters, NoticesFilterOptions, PaginatedResponse, Pet } from '../../types';
+import { mapApiErrorMessage } from '../../utils/mapApiErrorMessage';
 
 const initialFilterOptions: NoticesFilterOptions = {
   categories: [],
@@ -117,7 +118,7 @@ export const fetchNotices = createAsyncThunk(
 
       const { data } = await instance.get<PaginatedResponse<Pet>>(`/notices?${params}`);
       return data;
-    } catch (err: unknown) { return rejectWithValue((err as Error).message); }
+    } catch (err: unknown) { return rejectWithValue(mapApiErrorMessage(err)); }
   },
 );
 
@@ -135,7 +136,7 @@ export const fetchNoticesOptions = createAsyncThunk(
         sexOptions:     toStringArray(sexes.data),
         speciesOptions: toStringArray(species.data),
       } satisfies NoticesFilterOptions;
-    } catch (err: unknown) { return rejectWithValue((err as Error).message); }
+    } catch (err: unknown) { return rejectWithValue(mapApiErrorMessage(err)); }
   },
 );
 
@@ -159,7 +160,7 @@ export const toggleFavorite = createAsyncThunk(
         // Treat duplicate add/remove as a confirmed no-op to keep optimistic state.
         return { id, removed: isFavorite, favoriteIds: null };
       }
-      return rejectWithValue((err as Error).message);
+      return rejectWithValue(mapApiErrorMessage(err));
     }
   },
 );
@@ -179,11 +180,19 @@ const noticesSlice = createSlice({
       .addCase(fetchNotices.pending, (s) => { s.isLoading = true; s.error = null; })
       .addCase(fetchNotices.fulfilled, (s, a) => {
         s.isLoading = false;
+        if (!a.payload) {
+          s.error = mapApiErrorMessage(null);
+          return;
+        }
         s.items = a.payload.results;
         s.totalPages = a.payload.totalPages;
         s.currentPage = a.payload.page;
       })
-      .addCase(fetchNotices.rejected, (s, a) => { s.isLoading = false; s.error = a.payload as string; });
+      .addCase(fetchNotices.rejected, (s, a) => {
+        s.isLoading = false;
+        s.error =
+          typeof a.payload === 'string' && a.payload ? a.payload : mapApiErrorMessage(null);
+      });
 
     builder.addCase(fetchNoticesOptions.fulfilled, (s, a) => { s.filterOptions = a.payload; });
 

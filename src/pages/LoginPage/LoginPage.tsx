@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { LoginForm, type LoginFormValues } from '../../components/LoginForm/LoginForm';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { login } from '../../store/slices/authSlice';
+import { resolveThunkRejectMessage } from '../../utils/mapApiErrorMessage';
 import styles from './LoginPage.module.css';
 
 const LoginPage = () => {
@@ -14,9 +15,8 @@ const LoginPage = () => {
     try {
       await dispatch(login(data)).unwrap();
       navigate('/profile');
-    } catch (err) {
-      const message = err instanceof Error ? err.message : 'Something went wrong';
-      toast.error(message);
+    } catch (err: unknown) {
+      toast.error(resolveThunkRejectMessage(err));
     }
   };
 

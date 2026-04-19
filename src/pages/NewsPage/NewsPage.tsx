@@ -98,6 +98,7 @@ export const NewsPage = (): React.ReactElement => {
             <p>{error}</p>
             <button
               type="button"
+              className="pl-btn pl-btn--primary"
               onClick={() => void dispatch(fetchNews({ page: currentPage, keyword, limit: 6 }))}
               disabled={isLoading}
             >

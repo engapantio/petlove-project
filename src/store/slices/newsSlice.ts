@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { instance } from '../../api/axiosInstance';
 import type { NewsState, PaginatedResponse, NewsItem } from '../../types';
+import { mapApiErrorMessage } from '../../utils/mapApiErrorMessage';
 
 const initialState: NewsState = { items: [], totalPages: 1, currentPage: 1, search: '', isLoading: false, error: null };
 
@@ -18,7 +19,7 @@ export const fetchNews = createAsyncThunk(
 
       const { data } = await instance.get<PaginatedResponse<NewsItem>>(`/news?${params}`);
       return data;
-    } catch (err: unknown) { return rejectWithValue((err as Error).message); }
+    } catch (err: unknown) { return rejectWithValue(mapApiErrorMessage(err)); }
   },
 );
 
@@ -29,8 +30,20 @@ const newsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchNews.pending, (s) => { s.isLoading = true; s.error = null; })
-      .addCase(fetchNews.fulfilled, (s, a) => { s.isLoading = false; s.items = a.payload.results; s.totalPages = a.payload.totalPages; s.currentPage = a.payload.page; })
-      .addCase(fetchNews.rejected, (s, a) => { s.isLoading = false; s.error = a.payload as string; });
+      .addCase(fetchNews.fulfilled, (s, a) => {
+        s.isLoading = false;
+        if (!a.payload) {
+          s.error = mapApiErrorMessage(null);
+          return;
+        }
+        s.items = a.payload.results;
+        s.totalPages = a.payload.totalPages;
+        s.currentPage = a.payload.page;
+      })
+      .addCase(fetchNews.rejected, (s, a) => {
+        s.isLoading = false;
+        s.error = typeof a.payload === 'string' && a.payload ? a.payload : mapApiErrorMessage(null);
+      });
   },
 });
 

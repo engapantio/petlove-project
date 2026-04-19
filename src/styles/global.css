@@ -4,6 +4,12 @@
  * Fonts: link in index.html (Manrope).
  */
 
+html {
+  color-scheme: light;
+  /* Reserve scrollbar width so routes with different heights don’t shift centered layouts. */
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--text-base);

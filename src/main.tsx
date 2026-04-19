@@ -6,6 +6,8 @@ import App from './App';
 import { store } from './store';
 import './index.css';
 
+document.documentElement.setAttribute('data-theme', 'light');
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>

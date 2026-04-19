@@ -97,7 +97,7 @@ const NoticesPage = () => {
   const dispatch   = useAppDispatch();
   const isLoggedIn = useAppSelector((s) => s.auth.isLoggedIn);
   const currentUser = useAppSelector((s) => s.auth.user);
-  const { items, error, totalPages, currentPage, favoriteIds, filterOptions } =
+  const { items, error, totalPages, currentPage, favoriteIds, filterOptions, isLoading } =
     useAppSelector((s) => s.notices);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -192,6 +192,20 @@ const NoticesPage = () => {
   );
 
   // Page changes push a new history entry so back / forward works per page
+  const retryFetchNotices = useCallback(() => {
+    const params: Partial<NoticesFilters> = {
+      search:   localFilters.search   || undefined,
+      category: localFilters.category || undefined,
+      gender:   localFilters.gender   || undefined,
+      type:     localFilters.type     || undefined,
+      location: localFilters.location || undefined,
+      page,
+      limit: ITEMS_PER_PAGE,
+      ...(localFilters.sort ? SORT_MAP[localFilters.sort] : {}),
+    };
+    void dispatch(fetchNotices(params));
+  }, [dispatch, localFilters, page]);
+
   const handlePageChange = useCallback(
     (p: number) => {
       if (searchDebounceRef.current) {
@@ -266,8 +280,25 @@ const NoticesPage = () => {
       ) : (
         <div className={css.empty} role="status" aria-live="polite">
           <div className={css.emptyCard}>
-            <p className={css.emptyTitle}>No notices found</p>
-            <p className={css.emptyText}>Try adjusting your search or filters.</p>
+            {error ? (
+              <>
+                <p className={css.emptyTitle}>{error}</p>
+                <p className={css.emptyText}>Check your connection and try again.</p>
+                <button
+                  type="button"
+                  className="pl-btn pl-btn--primary"
+                  onClick={() => retryFetchNotices()}
+                  disabled={isLoading}
+                >
+                  Try again
+                </button>
+              </>
+            ) : (
+              <>
+                <p className={css.emptyTitle}>No notices found</p>
+                <p className={css.emptyText}>Try adjusting your search or filters.</p>
+              </>
+            )}
           </div>
         </div>
       )}
