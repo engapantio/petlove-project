@@ -32,3 +32,5 @@ tmp/
 test-results/
 playwright-report/
 .vercel/
+e2e/
+playwright.config.ts

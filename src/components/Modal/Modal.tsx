@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '../Icon';
+import { scrollbarCompensationPaddingPx } from '../../utils/scrollbarCompensationPaddingPx';
 import styles from './Modal.module.css';
 
 let openModalCount = 0;
@@ -18,7 +19,7 @@ const lockDocumentScroll = (): void => {
   if (openModalCount === 0) {
     const html = document.documentElement;
     const body = document.body;
-    const scrollbarWidth = window.innerWidth - html.clientWidth;
+    const scrollbarWidth = scrollbarCompensationPaddingPx();
 
     previousBodyOverflow = body.style.overflow;
     previousBodyPaddingRight = body.style.paddingRight;

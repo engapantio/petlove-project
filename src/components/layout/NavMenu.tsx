@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { NavLink } from 'react-router-dom';
 import { Icon } from '../Icon/Icon';
+import { scrollbarCompensationPaddingPx } from '../../utils/scrollbarCompensationPaddingPx';
 import styles from './NavMenu.module.css';
 
 /** 'home' → white panel; 'internal' → gold panel */
@@ -38,7 +39,7 @@ export const NavMenu = ({
     document.addEventListener('keydown', handleKeyDown);
     const prevOverflow = document.body.style.overflow;
     const prevPaddingRight = document.body.style.paddingRight;
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    const scrollbarWidth = scrollbarCompensationPaddingPx();
     document.body.style.overflow = 'hidden';
     if (scrollbarWidth > 0) {
       const currentPaddingRight = Number.parseFloat(window.getComputedStyle(document.body).paddingRight) || 0;
