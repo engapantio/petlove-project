@@ -18,7 +18,15 @@ export const FirstPetCongratsModal = ({
   if (!isOpen) return null;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={undefined} className={css.panel}>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={undefined}
+      className={css.panel}
+      headerClassName={css.header}
+      closeButtonClassName={css.closeButton}
+      bodyClassName={css.modalBody}
+    >
       <div className={css.root}>
         <div className={css.iconWrap} aria-hidden="true">
           <div className={css.iconCircle}>
