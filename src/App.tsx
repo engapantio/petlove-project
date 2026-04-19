@@ -1,10 +1,19 @@
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useStore } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useAppDispatch, useAppSelector } from './hooks/redux';
 import { refreshUser } from './store/slices/authSlice';
+import { fetchFriends } from './store/slices/friendsSlice';
+import { fetchNews } from './store/slices/newsSlice';
+import { fetchNotices, fetchNoticesOptions } from './store/slices/noticesSlice';
+import type { RootState } from './store';
+import {
+  skipDefaultNewsPrefetchFromLocation,
+  skipDefaultNoticesPrefetchFromLocation,
+} from './utils/idlePrefetchGuards';
 import PrivateRoute from './routes/PrivateRoute';
 import RestrictedRoute from './routes/RestrictedRoute';
 import Layout from './components/layout/Layout';
@@ -25,6 +34,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 // ── App ───────────────────────────────────────────────────────────────────────
 const App = () => {
   const dispatch = useAppDispatch();
+  const store = useStore();
   const isAuthInitialized = useAppSelector((state) => state.auth.isAuthInitialized);
   const isFavoritesInitialized = useAppSelector((state) => state.notices.isFavoritesInitialized);
   const [isBootReady, setIsBootReady] = useState(false);
@@ -52,6 +62,52 @@ const App = () => {
       isMounted = false;
     };
   }, [dispatch]);
+
+  /** Warm default lists + notices filters in idle time (SPA — no SSR). Guards avoid stomping URL-driven queries. */
+  useEffect(() => {
+    if (!isAuthInitialized || !isBootReady || !isFavoritesInitialized) return;
+
+    const run = (): void => {
+      const state = store.getState() as RootState;
+      void dispatch(fetchFriends());
+
+      if (
+        state.news.items.length === 0 &&
+        !state.news.isLoading &&
+        !skipDefaultNewsPrefetchFromLocation()
+      ) {
+        void dispatch(fetchNews({ page: 1, keyword: '', limit: 6 }));
+      }
+
+      if (
+        state.notices.items.length === 0 &&
+        !state.notices.isLoading &&
+        !skipDefaultNoticesPrefetchFromLocation()
+      ) {
+        void dispatch(fetchNotices({ page: 1, limit: 6 }));
+      }
+
+      void dispatch(fetchNoticesOptions());
+    };
+
+    let idleId: number | undefined;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    if (typeof window.requestIdleCallback === 'function') {
+      idleId = window.requestIdleCallback(run, { timeout: 4000 });
+    } else {
+      timeoutId = window.setTimeout(run, 400);
+    }
+
+    return () => {
+      if (idleId !== undefined && typeof window.cancelIdleCallback === 'function') {
+        window.cancelIdleCallback(idleId);
+      }
+      if (timeoutId !== undefined) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [dispatch, store, isAuthInitialized, isBootReady, isFavoritesInitialized]);
 
   if (!isAuthInitialized || !isBootReady || !isFavoritesInitialized) {
     return <RouteLoaderFallback />;

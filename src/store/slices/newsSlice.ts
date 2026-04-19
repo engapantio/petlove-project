@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { instance } from '../../api/axiosInstance';
 import type { NewsState, PaginatedResponse, NewsItem } from '../../types';
+import type { RootState } from '..';
 import { mapApiErrorMessage } from '../../utils/mapApiErrorMessage';
 
 const initialState: NewsState = { items: [], totalPages: 1, currentPage: 1, search: '', isLoading: false, error: null };
@@ -20,6 +21,9 @@ export const fetchNews = createAsyncThunk(
       const { data } = await instance.get<PaginatedResponse<NewsItem>>(`/news?${params}`);
       return data;
     } catch (err: unknown) { return rejectWithValue(mapApiErrorMessage(err)); }
+  },
+  {
+    condition: (_, { getState }) => !(getState() as RootState).news.isLoading,
   },
 );
 

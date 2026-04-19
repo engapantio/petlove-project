@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk, type PayloadAction } from '@reduxjs/tool
 import { instance } from '../../api/axiosInstance';
 import { login, logout, refreshUser, register, updateUserProfile } from './authSlice';
 import type { NoticesState, NoticesFilters, NoticesFilterOptions, PaginatedResponse, Pet } from '../../types';
+import type { RootState } from '..';
 import { mapApiErrorMessage } from '../../utils/mapApiErrorMessage';
 
 const initialFilterOptions: NoticesFilterOptions = {
@@ -119,6 +120,9 @@ export const fetchNotices = createAsyncThunk(
       const { data } = await instance.get<PaginatedResponse<Pet>>(`/notices?${params}`);
       return data;
     } catch (err: unknown) { return rejectWithValue(mapApiErrorMessage(err)); }
+  },
+  {
+    condition: (_, { getState }) => !(getState() as RootState).notices.isLoading,
   },
 );
 
